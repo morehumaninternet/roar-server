@@ -1,0 +1,26 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Work In Progress Roar Server Server",
+    "version": "0.0.1",
+    "title": "Roar Server",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "will@morehumaninternet.org"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "basePath": "/v1",
+  "schemes": ["https", "http"],
+  "paths": {
+  },
+  "definitions": {
+  },
+  "externalDocs": {
+    "description": "Read more",
+    "url": "https://github.com/morehumaninternet/roar-server"
+  }
+}

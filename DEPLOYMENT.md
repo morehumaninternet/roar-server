@@ -1,0 +1,1 @@
+For now, deployment is done manually via a push to [roar-server.herokuapp.com](roar-server.herokuapp.com)
