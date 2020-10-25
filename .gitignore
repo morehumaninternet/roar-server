@@ -49,3 +49,5 @@ jspm_packages
 .node_repl_history
 
 .env*
+
+package-lock.json
