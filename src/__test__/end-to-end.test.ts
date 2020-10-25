@@ -4,6 +4,7 @@ import { expect } from 'chai'
 import * as request from 'supertest'
 import * as sinon from 'sinon'
 import axios from 'axios'
+import * as clearbit from '../clearbit'
 import db from '../db'
 import server from '../server'
 
@@ -12,11 +13,13 @@ describe('end-to-end', () => {
 
   let app: any
   let agent: request.SuperTest<request.Test>
+  let clearBitGetTwitterHandle: sinon.SinonStub
 
   before(() => app = server.listen(5005))
   before(() => {
     agent = request.agent(app)
   })
+  beforeEach(() => clearBitGetTwitterHandle = sinon.stub(clearbit, 'getTwitterHandle').throws())
 
   after(() => app && app.close())
   after(() => db.destroy()) // Leave the database contents alone in case these are useful to inspect after tests have run
@@ -61,14 +64,16 @@ describe('end-to-end', () => {
         .end(done)
     })
 
-    it('200s with a null twitter_handle when the website exists, but has no twitter', async () => {
+    it('200s with the twitter handle from clearbit if the website HTML does not have a meta tag with the twitter handle', async () => {
+      clearBitGetTwitterHandle.resolves('@generations')
+
       const response = await agent
         .get('/v1/website?domain=https://generationsinc.org')
         .expect(200)
 
       expect(response.body).to.eql({
         domain: 'generationsinc.org',
-        twitter_handle: null
+        twitter_handle: '@generations'
       })
     })
   })

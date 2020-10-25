@@ -1,6 +1,6 @@
 import { IRouterContext } from 'koa-router'
-import axios from 'axios'
-import * as cheerio from 'cheerio'
+import * as scrape from './scrape'
+import * as clearbit from './clearbit'
 import db from './db'
 
 
@@ -32,34 +32,20 @@ const hostOf = (url: string): string => {
   }
 }
 
-async function getHtml(domain: string): Promise<string> {
-  try {
-    const { data } = await axios.get(`http://${domain}`)
-    return data
-  } catch (err) {
-    if (err.code === 'ENOTFOUND') {
-      throw { status: 404, message: `Website ${domain} not found` }
-    }
-    throw err
-  }
-}
-
 export async function getWebsite(ctx: IRouterContext): Promise<any> {
   const domain = hostOf(fromQuery(ctx, 'domain'))
 
   const [websiteRow] = await db.from('websites').select('twitter_handle').where({ domain })
 
-  if (websiteRow && websiteRow.twitter_handle) {
+  if (websiteRow) {
     return Object.assign(ctx.response, { status: 200, body: { domain, twitter_handle: websiteRow.twitter_handle } })
   }
 
-  if (!websiteRow) {
-    const $ = cheerio.load(await getHtml(domain))
-    const twitterHandleFromHtml = $('meta[name="twitter:site"]').attr('content') || $('meta[name="twitter:creator"]').attr('content') || null
-    if (twitterHandleFromHtml) {
-      await db('websites').insert({ domain, twitter_handle: twitterHandleFromHtml })
-    }
+  const twitterHandle = await scrape.getTwitterHandle(domain) || await clearbit.getTwitterHandle(domain)
 
-    return Object.assign(ctx.response, { status: 200, body: { domain, twitter_handle: twitterHandleFromHtml } })
-  }
+  // Insert the row no matter what
+  // TODO: implement logic to scrape & try clearbit again if the last fetch was done awhile ago
+  await db('websites').insert({ domain, twitter_handle: twitterHandle })
+
+  return Object.assign(ctx.response, { status: 200, body: { domain, twitter_handle: twitterHandle } })
 }
