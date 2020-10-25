@@ -42,7 +42,7 @@ Create a database for both local development & for running tests. If prompted fo
 > createdb -h localhost -U $your_user -W roar_test
 ```
 
-Create a `.env.dev` file at the root level of the project with the connection information for the database you created. You may optionally specify a port. By default, the dev server runs on `5004` and the test server runs on `5005`.
+Create a `.env.dev` file at the root level of the project with the connection information for the database you created. Create an account with [Clearbit](clearbit.com) to get a `CLEARBIT_SECRET_API_KEY`. You may optionally specify a port. By default, the dev server runs on `5004` and the test server runs on `5005`.
 
 ```
 DB_HOST=localhost
@@ -50,9 +50,10 @@ DB_PASS=
 DB_USER=$your_user
 DB_NAME=roar_dev
 PORT=
+CLEARBIT_SECRET_API_KEY=
 ```
 
-Do the same for `.env.test`.
+Do the same for `.env.test`. Calls to clearbit should always be stubbed out on test environments.
 
 ```
 DB_HOST=localhost
