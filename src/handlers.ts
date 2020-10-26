@@ -53,6 +53,8 @@ export async function getWebsite(ctx: IRouterContext): Promise<any> {
 
 export async function login(ctx: IRouterContext): Promise<any> {
   const res = await getOauthInfo()
-  console.log(res)
+
+  return ctx.redirect(`https://api.twitter.com/oauth/authenticate?oauth_token=${res}`)
+
   return Object.assign(ctx.response, { status: 200, body: { } })
 }
