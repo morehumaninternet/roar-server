@@ -46,15 +46,17 @@ export async function getWebsite(ctx: IRouterContext): Promise<any> {
 
   // Insert the row no matter what
   // TODO: implement logic to scrape & try clearbit again if the last fetch was done awhile ago
+  // tslint:disable-next-line: no-expression-statement
   await db('websites').insert({ domain, twitter_handle: twitterHandle })
 
   return Object.assign(ctx.response, { status: 200, body: { domain, twitter_handle: twitterHandle } })
 }
 
 export async function login(ctx: IRouterContext): Promise<any> {
-  const res = await getOauthInfo()
-
-  return ctx.redirect(`https://api.twitter.com/oauth/authenticate?oauth_token=${res}`)
-
-  return Object.assign(ctx.response, { status: 200, body: { } })
+  try {
+    const oauth_token = await getOauthInfo()
+    return ctx.redirect(`https://api.twitter.com/oauth/authenticate?oauth_token=${oauth_token}`)
+  } catch {
+    return Object.assign(ctx.response, { status: 503, body: 'Roar service is currently unavailable.' })
+  }
 }
