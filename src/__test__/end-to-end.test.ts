@@ -4,8 +4,8 @@ import { expect } from 'chai'
 import * as request from 'supertest'
 import * as sinon from 'sinon'
 import axios from 'axios'
-import * as clearbit from '../clearbit'
 import db from '../db'
+import * as clearbit from '../clearbit'
 import server from '../server'
 
 

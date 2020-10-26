@@ -1,7 +1,7 @@
 import { IRouterContext } from 'koa-router'
+import db from './db'
 import * as scrape from './scrape'
 import * as clearbit from './clearbit'
-import db from './db'
 
 
 const fromBody = (ctx: IRouterContext, fieldName: string, type: 'string' | 'number' | 'boolean') => {
