@@ -2,6 +2,7 @@ import { IRouterContext } from 'koa-router'
 import db from './db'
 import * as scrape from './scrape'
 import * as clearbit from './clearbit'
+import getOauthInfo from './twitter'
 
 
 const fromBody = (ctx: IRouterContext, fieldName: string, type: 'string' | 'number' | 'boolean') => {
@@ -48,4 +49,10 @@ export async function getWebsite(ctx: IRouterContext): Promise<any> {
   await db('websites').insert({ domain, twitter_handle: twitterHandle })
 
   return Object.assign(ctx.response, { status: 200, body: { domain, twitter_handle: twitterHandle } })
+}
+
+export async function login(ctx: IRouterContext): Promise<any> {
+  const res = await getOauthInfo()
+  console.log(res)
+  return Object.assign(ctx.response, { status: 200, body: { } })
 }
