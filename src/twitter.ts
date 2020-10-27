@@ -15,7 +15,7 @@ const T = new Twit({
 // After a successful login, the user will be redirected to the production server or the localhost while on development/test mode.
 // The 'oauth_token' and 'oauth_verifier' will be included as params in the redirected URL
 // TODO - extract production server URL
-const host = process.env.NODE_ENV === 'production'
+const host = process.env.NODE_ENV === 'prod'
   ? 'https://roar-server.herokuapp.com'
   : 'http://localhost:5004'
 
