@@ -7,6 +7,7 @@ import * as handlers from './handlers'
 const v1Router = new Router()
   .get('/website', handlers.getWebsite)
   .get('/login', handlers.login)
+  .get('/processtwitter', handlers.processtwitter)
 
 const router = new Router()
   .get(`/health-check`, ({ response }) => Object.assign(response, { status: 200, body: 'OK' }))

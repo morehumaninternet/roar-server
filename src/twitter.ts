@@ -26,11 +26,24 @@ export async function getOauthToken() {
     // The 'twit' package expect the callback to be 'err' object without a 'statusCode' attribute and a 'data' object.
     // Twitter sends back the 'err' object with 'statusCode' and 'data' as a string
     // tslint:disable-next-line: typedef
-    return T.post('https://api.twitter.com/oauth/request_token', { oauth_callback} as any, function(err: any, data) {
+    return T.post('https://api.twitter.com/oauth/request_token', { oauth_callback } as any, function (err: any, data) {
       if (err && err.statusCode !== 200) {
         return reject(err)
       } else {
         return resolve(parse(data as unknown as string).oauth_token)
+      }
+    })
+  })
+}
+
+export async function processtwitter(oauth_token: string, oauth_verifier: string) {
+  return new Promise((resolve, reject) => {
+    // tslint:disable-next-line: typedef
+    return T.post('https://api.twitter.com/oauth/access_token', { oauth_verifier, oauth_token } as any, function (err: any, data) {
+      if (err && err.statusCode !== 200) {
+        return reject(err)
+      } else {
+        return resolve(parse(data as unknown as string))
       }
     })
   })

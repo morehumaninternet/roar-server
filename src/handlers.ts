@@ -60,3 +60,15 @@ export async function login(ctx: IRouterContext): Promise<any> {
     return Object.assign(ctx.response, { status: 503, body: 'Roar service is currently unavailable.' })
   }
 }
+
+export async function processtwitter(ctx: IRouterContext): Promise<any> {
+  const oauth_token = fromQuery(ctx, 'oauth_token')
+  const oauth_verifier = fromQuery(ctx, 'oauth_verifier')
+
+  try {
+    const accessToken = await twitter.processtwitter(oauth_token, oauth_verifier)
+    return Object.assign(ctx.response, { status: 200, body: { accessToken } })
+  } catch {
+    return Object.assign(ctx.response, { status: 200, body: { error: 'Oops! Something wrong.', oauth_token, oauth_verifier } })
+  }
+}
