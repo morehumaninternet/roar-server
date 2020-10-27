@@ -2,6 +2,7 @@ import { IRouterContext } from 'koa-router'
 import db from './db'
 import * as scrape from './scrape'
 import * as clearbit from './clearbit'
+import * as twitter from './twitter'
 
 
 const fromBody = (ctx: IRouterContext, fieldName: string, type: 'string' | 'number' | 'boolean') => {
@@ -45,7 +46,17 @@ export async function getWebsite(ctx: IRouterContext): Promise<any> {
 
   // Insert the row no matter what
   // TODO: implement logic to scrape & try clearbit again if the last fetch was done awhile ago
+  // tslint:disable-next-line: no-expression-statement
   await db('websites').insert({ domain, twitter_handle: twitterHandle })
 
   return Object.assign(ctx.response, { status: 200, body: { domain, twitter_handle: twitterHandle } })
+}
+
+export async function login(ctx: IRouterContext): Promise<any> {
+  try {
+    const oauth_token = await twitter.getOauthToken()
+    return ctx.redirect(`https://api.twitter.com/oauth/authenticate?oauth_token=${oauth_token}`)
+  } catch {
+    return Object.assign(ctx.response, { status: 503, body: 'Roar service is currently unavailable.' })
+  }
 }
