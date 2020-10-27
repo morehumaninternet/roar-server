@@ -2,7 +2,7 @@ import { IRouterContext } from 'koa-router'
 import db from './db'
 import * as scrape from './scrape'
 import * as clearbit from './clearbit'
-import getOauthInfo from './twitter'
+import * as twitter from './twitter'
 
 
 const fromBody = (ctx: IRouterContext, fieldName: string, type: 'string' | 'number' | 'boolean') => {
@@ -54,7 +54,7 @@ export async function getWebsite(ctx: IRouterContext): Promise<any> {
 
 export async function login(ctx: IRouterContext): Promise<any> {
   try {
-    const oauth_token = await getOauthInfo()
+    const oauth_token = await twitter.getOauthToken()
     return ctx.redirect(`https://api.twitter.com/oauth/authenticate?oauth_token=${oauth_token}`)
   } catch {
     return Object.assign(ctx.response, { status: 503, body: 'Roar service is currently unavailable.' })
