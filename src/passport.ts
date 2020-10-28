@@ -28,21 +28,13 @@ passport.deserializeUser(async function(id, done) {
   }
 })
 
-console.log('here', {
-  callbackURL,
-  consumerKey: process.env.TWITTER_API_KEY!,
-  consumerSecret: process.env.TWITTER_KEY_SECRET!,
-})
-
 passport.use(new passportTwitter.Strategy({
   callbackURL,
   consumerKey: process.env.TWITTER_API_KEY!,
   consumerSecret: process.env.TWITTER_KEY_SECRET!,
 }, function(token, tokenSecret, profile, cb) {
-  console.log('zzz', token, tokenSecret, profile)
+  console.log('passportTwitter.Strategy', token, tokenSecret, profile)
   fetchUser(profile).then(user => cb(null, user))
-
-  // cb(null, { profile, token, tokenSecret })
 }))
 
 export default passport

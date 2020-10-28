@@ -2,7 +2,7 @@ import { IRouterContext } from 'koa-router'
 import db from './db'
 import * as scrape from './scrape'
 import * as clearbit from './clearbit'
-import * as twitter from './passport'
+import passport from './passport'
 
 
 const fromBody = (ctx: IRouterContext, fieldName: string, type: 'string' | 'number' | 'boolean') => {
@@ -50,4 +50,29 @@ export async function getWebsite(ctx: IRouterContext): Promise<any> {
   await db('websites').insert({ domain, twitter_handle: twitterHandle })
 
   return Object.assign(ctx.response, { status: 200, body: { domain, twitter_handle: twitterHandle } })
+}
+
+export const authTwitter = passport.authenticate('twitter')
+
+export const authTwitterCallback = passport.authenticate('twitter', {
+  successRedirect: '/v1/auth/twitter/success',
+  failureRedirect: '/v1/auth/twitter/failure'
+})
+
+export async function authTwitterSuccess(ctx: IRouterContext): Promise<any> {
+  ctx.type = 'html'
+  ctx.body = `
+    <script>
+      postMessage('twitter-auth-success');
+    </script>
+  `
+}
+
+export async function authTwitterFailure(ctx: IRouterContext): Promise<any> {
+  ctx.type = 'html'
+  ctx.body = `
+    <script>
+      postMessage('twitter-auth-failure');
+    </script>
+  `
 }

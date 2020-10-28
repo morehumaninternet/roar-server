@@ -12,6 +12,7 @@ const server = new Koa()
 
 server.proxy = true
 
+// TODO: turn this back on?
 // server.use(helmet({ noCache: true }))
 // server.use(({ response }, next) => (
 //   response.set('Access-Control-Allow-Methods', '*'),
@@ -25,8 +26,8 @@ server.use(cookieParser.default())
 server.use(middleware.trackRequests)
 
 server.keys = ['your-session-secret']
+
 server.use(session({
-  // secure: process.env.NODE_ENV === 'prod',
   secure: true,
   sameSite: 'none'
 }, server))
