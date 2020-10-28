@@ -10,6 +10,8 @@ import router from './router'
 
 const server = new Koa()
 
+server.proxy = true
+
 // server.use(helmet({ noCache: true }))
 // server.use(({ response }, next) => (
 //   response.set('Access-Control-Allow-Methods', '*'),
