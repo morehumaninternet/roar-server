@@ -7,7 +7,7 @@
   Roar! Server
 </h1>
 
-Built with ❤️ by the team at <a href="https://morehumaninternet.org">More Human Internet</a>
+Built with ❤️ by the team at <a href="https://morehumaninternet.org">More Human Internet</a>. See also [Roar! Extension](https://github.com/morehumaninternet/roar-extension)
 
 ## Table of Contents
 
