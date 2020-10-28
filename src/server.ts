@@ -29,7 +29,8 @@ server.keys = ['your-session-secret']
 
 server.use(session({
   secure: true,
-  sameSite: 'none'
+  sameSite: 'none',
+  httpOnly: false
 }, server))
 
 server.use(passport.initialize())
