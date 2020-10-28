@@ -63,7 +63,7 @@ export async function authTwitterSuccess(ctx: IRouterContext): Promise<any> {
   ctx.type = 'html'
   ctx.body = `
     <script>
-      postMessage('twitter-auth-success', '*');
+      window.parent.postMessage('twitter-auth-success', '*');
     </script>
   `
 }
@@ -72,7 +72,7 @@ export async function authTwitterFailure(ctx: IRouterContext): Promise<any> {
   ctx.type = 'html'
   ctx.body = `
     <script>
-      postMessage('twitter-auth-failure', '*');
+      window.parent.postMessage('twitter-auth-failure', '*');
     </script>
   `
 }
