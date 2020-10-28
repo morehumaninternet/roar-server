@@ -42,7 +42,7 @@ Create a database for both local development & for running tests. If prompted fo
 > createdb -h localhost -U $your_user -W roar_test
 ```
 
-Create a `.env.dev` file at the root level of the project with the connection information for the database you created. Create an account with [Clearbit](clearbit.com) to get a `CLEARBIT_SECRET_API_KEY`. You may optionally specify a port. By default, the dev server runs on `5004` and the test server runs on `5005`.
+Create a `.env.dev` file at the root level of the project with the connection information for the database you created. Create an account with [Clearbit](https://clearbit.com/) to get a `CLEARBIT_SECRET_API_KEY`. Apply for a Twitter Developer account to get `TWITTER_API_KEY` and `TWITTER_KEY_SECRET`. You may optionally specify a port. By default, the dev server runs on `5004` and the test server runs on `5005`.
 
 ```
 DB_HOST=localhost
@@ -51,6 +51,8 @@ DB_USER=$your_user
 DB_NAME=roar_dev
 PORT=
 CLEARBIT_SECRET_API_KEY=
+TWITTER_API_KEY=
+TWITTER_KEY_SECRET=
 ```
 
 Do the same for `.env.test`. Calls to clearbit should always be stubbed out on test environments.
@@ -61,6 +63,8 @@ DB_PASS=
 DB_USER=$your_user
 DB_NAME=roar_test
 PORT=
+TWITTER_API_KEY=
+TWITTER_KEY_SECRET=
 ```
 
 Run the [database migrations](/db/migrations) for each.
@@ -69,6 +73,8 @@ Run the [database migrations](/db/migrations) for each.
 > NODE_ENV=dev npm run knex migrate:latest
 > NODE_ENV=test npm run knex migrate:latest
 ```
+
+The development environment requires a valid certificate. You can find a certificate [here](/certs/localhost.crt). This is a self-signed certificate so you need to tell your OS to trust it. See instructions [here](https://reactpaths.com/how-to-get-https-working-in-localhost-development-environment-f17de34af046#0fc3), but note that our certificate is called 'roar-server'. In addition, you might need to approve the certificate with your browser. If you see a warning message on Chrome, click on the "Advanced" button and then on the "Process to ... (unsafe)". If you see a warning message on Firefox, click on the "Advanced..." button and then on the "Accept the Risk and Continue".
 
 Run end-to-end tests.
 
