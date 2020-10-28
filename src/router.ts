@@ -2,12 +2,17 @@ import * as Router from 'koa-router'
 import * as send from 'koa-send'
 import { readdirSync } from 'fs'
 import * as handlers from './handlers'
-
+import passport from './passport'
 
 const v1Router = new Router()
   .get('/website', handlers.getWebsite)
-  .get('/login', handlers.login)
-  .get('/processtwitter', handlers.processtwitter)
+  .get('/auth/twitter', passport.authenticate('twitter'))
+  .get('/auth/twitter/callback', passport.authenticate('twitter', {
+    successRedirect: '/v1/auth/twitter/success',
+    failureRedirect: '/v1/auth/twitter/failure'
+  }))
+  .get('/auth/twitter/success', ctx => Object.assign(ctx.response, { status: 200, body: 'OK' }))
+  .get('/auth/twitter/failure', ctx => Object.assign(ctx.response, { status: 200, body: 'NOT OK' }))
 
 const router = new Router()
   .get(`/health-check`, ({ response }) => Object.assign(response, { status: 200, body: 'OK' }))

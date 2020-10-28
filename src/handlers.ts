@@ -2,7 +2,7 @@ import { IRouterContext } from 'koa-router'
 import db from './db'
 import * as scrape from './scrape'
 import * as clearbit from './clearbit'
-import * as twitter from './twitter'
+import * as twitter from './passport'
 
 
 const fromBody = (ctx: IRouterContext, fieldName: string, type: 'string' | 'number' | 'boolean') => {
@@ -50,25 +50,4 @@ export async function getWebsite(ctx: IRouterContext): Promise<any> {
   await db('websites').insert({ domain, twitter_handle: twitterHandle })
 
   return Object.assign(ctx.response, { status: 200, body: { domain, twitter_handle: twitterHandle } })
-}
-
-export async function login(ctx: IRouterContext): Promise<any> {
-  try {
-    const oauth_token = await twitter.getOauthToken()
-    return ctx.redirect(`https://api.twitter.com/oauth/authenticate?oauth_token=${oauth_token}`)
-  } catch {
-    return Object.assign(ctx.response, { status: 503, body: 'Roar service is currently unavailable.' })
-  }
-}
-
-export async function processtwitter(ctx: IRouterContext): Promise<any> {
-  const oauth_token = fromQuery(ctx, 'oauth_token')
-  const oauth_verifier = fromQuery(ctx, 'oauth_verifier')
-
-  try {
-    const accessToken = await twitter.processtwitter(oauth_token, oauth_verifier)
-    return Object.assign(ctx.response, { status: 200, body: { accessToken } })
-  } catch {
-    return Object.assign(ctx.response, { status: 200, body: { error: 'Oops! Something wrong.', oauth_token, oauth_verifier } })
-  }
 }

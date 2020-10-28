@@ -1,3 +1,4 @@
+import '../env'
 import server from './server'
 
 const port = Number(process.env.PORT) || 5004
