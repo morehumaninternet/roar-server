@@ -1,6 +1,6 @@
 import * as passport from 'koa-passport'
 import * as passportTwitter from 'passport-twitter'
-import db from './db'
+import * as users from './users'
 
 
 const host = process.env.NODE_ENV === 'prod'
@@ -9,16 +9,6 @@ const host = process.env.NODE_ENV === 'prod'
 
 const callbackURL = `${host}/v1/auth/twitter/callback`
 
-async function fetchUser(id: number): Promise<Maybe<User>> {
-  console.log('fetchUser', id)
-  return db<User>('users').where('id', id).first()
-}
-
-async function fetchUserByTwitterId(twitterId: string): Promise<Maybe<User>> {
-  console.log('fetchUserByTwitterId', twitterId)
-  return db<User>('users').where('twitter_id', twitterId).first()
-}
-
 // tslint:disable-next-line: no-expression-statement
 passport.serializeUser((user: User, done) => (console.log('passport.serializeUser', user), done(null, user.id)))
 
@@ -26,7 +16,7 @@ passport.serializeUser((user: User, done) => (console.log('passport.serializeUse
 passport.deserializeUser(async (id: number, done) => {
   console.log('passport.deserializeUser', id)
   try {
-    const user = await fetchUser(id)
+    const user = await users.fetchUser(id)
     return done(null, user)
   } catch (err) {
     return done(err)
@@ -39,20 +29,13 @@ passport.use(new passportTwitter.Strategy({
   consumerKey: process.env.TWITTER_API_KEY!,
   consumerSecret: process.env.TWITTER_KEY_SECRET!,
 }, async (_token, _tokenSecret, profile, done) => {
-  console.log('passportTwitter.Strategy', profile)
+  console.log('passportTwitter.Strategy profile', profile)
   // This function is called only when the user tries to login with Twitter.
   // The user might already exist in our database or a new user should be created.
 
-  const user = await fetchUserByTwitterId(profile.id) || (
-    await db<User>('users').insert({
-      twitter_id: profile.id,
-      twitter_handle: profile.username,
-      display_name: profile.displayName,
-      photo: profile.photos && profile.photos[0].value,
-      email: profile.emails && profile.emails[0].value
-    })
-  )
+  const user: User = await users.fetchUserByTwitterId(profile.id) || await users.createUserFromTwitterProfile(profile)
 
+  console.log('passportTwitter.Strategy user', user)
   return done(null, user)
 }))
 
