@@ -10,18 +10,21 @@ const host = process.env.NODE_ENV === 'prod'
 const callbackURL = `${host}/v1/auth/twitter/callback`
 
 async function fetchUser(id: number): Promise<Maybe<User>> {
+  console.log('fetchUser', id)
   return db<User>('users').where('id', id).first()
 }
 
 async function fetchUserByTwitterId(twitterId: string): Promise<Maybe<User>> {
+  console.log('fetchUserByTwitterId', twitterId)
   return db<User>('users').where('twitter_id', twitterId).first()
 }
 
 // tslint:disable-next-line: no-expression-statement
-passport.serializeUser((user: User, done) => done(null, user.id))
+passport.serializeUser((user: User, done) => (console.log('passport.serializeUser', user), done(null, user.id)))
 
 // tslint:disable-next-line: no-expression-statement
 passport.deserializeUser(async (id: number, done) => {
+  console.log('passport.deserializeUser', id)
   try {
     const user = await fetchUser(id)
     return done(null, user)
@@ -36,6 +39,7 @@ passport.use(new passportTwitter.Strategy({
   consumerKey: process.env.TWITTER_API_KEY!,
   consumerSecret: process.env.TWITTER_KEY_SECRET!,
 }, async (_token, _tokenSecret, profile, done) => {
+  console.log('passportTwitter.Strategy', profile)
   // This function is called only when the user tries to login with Twitter.
   // The user might already exist in our database or a new user should be created.
 
