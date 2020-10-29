@@ -42,7 +42,7 @@ passport.use(new passportTwitter.Strategy({
   const user = await fetchUserByTwitterId(profile.id) || (
     await db<User>('users').insert({
       twitter_id: profile.id,
-      username: profile.username,
+      twitter_handle: profile.username,
       display_name: profile.displayName,
       photo: profile.photos && profile.photos[0].value,
       email: profile.emails && profile.emails[0].value

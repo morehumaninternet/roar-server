@@ -1,7 +1,7 @@
 type User = {
     id: number,
     twitter_id: string,
-    username: string
+    twitter_handle: string
     display_name: string,
     photo?: string,
     email?: string,
