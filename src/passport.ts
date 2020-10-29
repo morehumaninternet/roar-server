@@ -3,8 +3,6 @@ import * as passportTwitter from 'passport-twitter'
 import * as users from './users'
 
 
-type Done<T> = (err?: any, result?: T) => void
-
 const host = process.env.NODE_ENV === 'prod'
   ? 'https://roar-server.herokuapp.com'
   : 'https://localhost:5004'
