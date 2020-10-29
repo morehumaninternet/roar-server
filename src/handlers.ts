@@ -52,27 +52,38 @@ export async function getWebsite(ctx: IRouterContext): Promise<any> {
   return Object.assign(ctx.response, { status: 200, body: { domain, twitter_handle: twitterHandle } })
 }
 
+// Redirect the user to Twitter for authentication. When complete, Twitter
+// will redirect the user back to the application at
+// /auth/twitter/callback
 export const authTwitter = passport.authenticate('twitter')
 
+// Twitter will redirect the user to this URL after approval. Finish the
+// authentication process by attempting to obtain an access token. If
+// access was granted, the user will be logged in. Otherwise,
+// authentication has failed.
 export const authTwitterCallback = passport.authenticate('twitter', {
   successRedirect: '/v1/auth/twitter/success',
   failureRedirect: '/v1/auth/twitter/failure'
 })
 
 export async function authTwitterSuccess(ctx: IRouterContext): Promise<any> {
+  // tslint:disable: no-expression-statement
   ctx.type = 'html'
   ctx.body = `
     <script>
       window.parent.postMessage({ type: 'twitter-auth-success', cookie: document.cookie }, '*');
     </script>
   `
+  // tslint:enable: no-expression-statement
 }
 
 export async function authTwitterFailure(ctx: IRouterContext): Promise<any> {
+  // tslint:disable: no-expression-statement
   ctx.type = 'html'
   ctx.body = `
     <script>
       window.parent.postMessage({ type: 'twitter-auth-failure' }, '*');
     </script>
   `
+  // tslint:enable: no-expression-statement
 }
