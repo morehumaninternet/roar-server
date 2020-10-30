@@ -1,6 +1,7 @@
 import * as passport from 'koa-passport'
 import * as passportTwitter from 'passport-twitter'
 import * as users from './users'
+import * as sessions from './sessions'
 
 
 const host = process.env.NODE_ENV === 'prod'
@@ -31,14 +32,20 @@ passport.use(new passportTwitter.Strategy({
   callbackURL,
   consumerKey: process.env.TWITTER_API_KEY!,
   consumerSecret: process.env.TWITTER_KEY_SECRET!,
-}, async (_token, _tokenSecret, profile, done: Done<User>) => {
-  console.log('passportTwitter.Strategy profile', profile)
+}, async (token, tokenSecret, profile, done: Done<User>) => {
   // This function is called only when the user tries to login with Twitter.
   // The user might already exist in our database or a new user should be created.
 
   const user: User = await users.fetchUserByTwitterId(profile.id) || await users.createUserFromTwitterProfile(profile)
 
-  console.log('passportTwitter.Strategy user', user)
+  const session: Maybe<Session> = await sessions.fetchSessionByUserId(user.id)
+  // tslint:disable no-expression-statement
+  if (!session) {
+    await sessions.createSession(user.id, token, tokenSecret)
+  } else {
+    await sessions.updateSession(user.id, token, tokenSecret)
+  }
+  // tslint:enable no-expression-statement
   return done(null, user)
 }))
 
