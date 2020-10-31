@@ -11,3 +11,9 @@ type UserInsert = {
 type User = UserInsert & {
   id: number
 }
+
+type SerializedUser = {
+  id: number
+  token: string
+  tokenSecret: string
+}

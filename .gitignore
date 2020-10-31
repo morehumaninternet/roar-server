@@ -48,6 +48,11 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
+# Local files with environment variables
 .env*
 
+# Hard code packages to avoid needing this
 package-lock.json
+
+# Local redis storage
+dump.rdb
