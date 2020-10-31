@@ -3,6 +3,7 @@ import bodyParser = require('koa-body')
 import * as session from 'koa-session'
 const cookieParser = require('koa-cookie')
 const helmet = require('koa-helmet')
+const RedisStore = require('koa-redis')
 import passport from './passport'
 import * as middleware from './middleware'
 import router from './router'
@@ -11,6 +12,7 @@ import router from './router'
 const server = new Koa()
 
 server.proxy = true
+server.keys = [process.env.SESSION_KEY || 'keyboard-cat']
 
 // TODO: turn this back on?
 // server.use(helmet({ noCache: true }))
@@ -25,12 +27,12 @@ server.use(bodyParser({ multipart: true, jsonLimit: '50mb' }))
 server.use(cookieParser.default())
 server.use(middleware.trackRequests)
 
-server.keys = ['your-session-secret']
+const redisOpts = process.env.REDIS_URL && { url: process.env.REDIS_URL }
 
 server.use(session({
   secure: true,
   sameSite: 'none',
-  httpOnly: false
+  store: new RedisStore(redisOpts),
 }, server))
 
 server.use(passport.initialize())

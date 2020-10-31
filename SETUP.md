@@ -26,6 +26,12 @@ Get [postgres](https://www.postgresql.org/).
 > brew install postgresql
 ```
 
+Get [redis](https://redis.io/).
+
+```bash
+> brew install redis
+```
+
 ## Setup
 
 Use the correct node version and install node_modules.
@@ -74,13 +80,19 @@ Run the [database migrations](/db/migrations) for each.
 > NODE_ENV=test npm run knex migrate:latest
 ```
 
-The development environment requires a valid certificate. You can find a certificate [here](/certs/localhost.crt). This is a self-signed certificate so you need to tell your OS to trust it. See instructions [here](https://reactpaths.com/how-to-get-https-working-in-localhost-development-environment-f17de34af046#0fc3), but note that our certificate is called 'roar-server'. In addition, you might need to approve the certificate with your browser. If you see a warning message on Chrome, click on the "Advanced" button and then on the "Process to ... (unsafe)". If you see a warning message on Firefox, click on the "Advanced..." button and then on the "Accept the Risk and Continue".
+Start a redis server
+
+```
+> redis-server
+```
 
 Run end-to-end tests.
 
 ```bash
 > npm test
 ```
+
+The development environment requires a valid certificate. You can find a certificate [here](/certs/localhost.crt). This is a self-signed certificate so you need to tell your OS to trust it. See instructions [here](https://reactpaths.com/how-to-get-https-working-in-localhost-development-environment-f17de34af046#0fc3), but note that our certificate is called 'roar-server'. In addition, you might need to approve the certificate with your browser. If you see a warning message on Chrome, click on the "Advanced" button and then on the "Process to ... (unsafe)". If you see a warning message on Firefox, click on the "Advanced..." button and then on the "Accept the Risk and Continue".
 
 Start a development server and watch source files in [/src](/src).
 
