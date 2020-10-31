@@ -2,6 +2,8 @@ import { IRouterContext } from 'koa-router'
 import db from './db'
 import * as scrape from './scrape'
 import * as clearbit from './clearbit'
+import * as sessions from './sessions'
+import * as twitter from './twitter'
 import passport from './passport'
 
 
@@ -86,4 +88,20 @@ export async function authTwitterFailure(ctx: IRouterContext): Promise<any> {
     </script>
   `
   // tslint:enable: no-expression-statement
+}
+
+export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
+
+  const status = fromBody(ctx, 'status', 'string')
+  const currentUserId = ctx.session && ctx.session.passport.user
+  const session: Maybe<Session> = await sessions.fetchSessionByUserId(currentUserId)
+  if (!session) {
+    throw { status: 500, message: `Could not find a session` }
+  }
+  const { access_token, access_token_secret } = session
+
+  // TODO - handle response
+  await twitter.tweetStatus(status, access_token, access_token_secret)
+
+  return Object.assign(ctx.response, { status: 200, body: {} })
 }
