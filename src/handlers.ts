@@ -117,7 +117,6 @@ export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
     throw { status: 401 }
   }
 
-  // TODO - handle response
   const params = {
     status,
     screenshots,

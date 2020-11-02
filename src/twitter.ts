@@ -1,9 +1,9 @@
 import { promisify } from 'util'
-import * as fs from 'fs'
+import { readFile as fsReadFile } from 'fs'
 import * as Twit from 'twit'
 import { File } from 'formidable'
 
-const readFile = promisify(fs.readFile)
+const readFile = promisify(fsReadFile)
 
 type TweetStatusArgs = {
     status: string,
