@@ -12,7 +12,11 @@ type TweetStatusArgs = {
     access_token_secret: string
 }
 
-export const tweetStatus = async ({ status, screenshots, access_token, access_token_secret }: TweetStatusArgs) => {
+type TweetResponse = {
+    url: string
+}
+
+export const tweetStatus = async ({ status, screenshots, access_token, access_token_secret }: TweetStatusArgs): Promise<TweetResponse> => {
 
     const T = new Twit({
         consumer_key: process.env.TWITTER_API_KEY!,
@@ -36,13 +40,14 @@ export const tweetStatus = async ({ status, screenshots, access_token, access_to
     const tweet = { status, media_ids }
     const { data, resp } = await T.post('statuses/update', tweet)
 
-    // Extracting the tweet URL from the data
-    const entities = (data as any).entities
-    const media = entities && entities.media
-    const url = media && media[0] && media[0].url
+    if (resp.statusCode !== 200) {
+        throw { status: resp.statusCode, message: resp.statusMessage }
+    }
 
-    const status_code = resp.statusCode
-    const status_message = resp.statusMessage
+    const url = (data as any).entities?.media?.[0]?.url
+    if (!url) {
+        throw { status: 503, message: 'Response from twitter did not include a URL' }
+    }
 
-    return { status_code, status_message, url }
+    return { url }
 }
