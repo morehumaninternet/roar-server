@@ -35,5 +35,14 @@ export const tweetStatus = async ({ status, screenshots, access_token, access_to
 
     const tweet = { status, media_ids }
     const { data, resp } = await T.post('statuses/update', tweet)
-    return { data, resp }
+
+    // Extracting the tweet URL from the data
+    const entities = (data as any).entities
+    const media = entities && entities.media
+    const url = media && media[0] && media[0].url
+
+    const status_code = resp.statusCode
+    const status_message = resp.statusMessage
+
+    return { status_code, status_message, url }
 }

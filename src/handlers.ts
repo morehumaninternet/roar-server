@@ -124,7 +124,14 @@ export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
     access_token: user.token,
     access_token_secret: user.tokenSecret
   }
-  await twitter.tweetStatus(params)
 
-  return Object.assign(ctx.response, { status: 200, body: {} })
+  try {
+    const { status_code, status_message, url } = await twitter.tweetStatus(params)
+    if (status_code !== 200) {
+      throw new Error(`${status_code} ${status_message}`)
+    }
+    return Object.assign(ctx.response, { status: 201, body: { url } })
+  } catch (error) {
+    throw { status: 400, message: `Failed to post the tweet. Error: ${error}` }
+  }
 }
