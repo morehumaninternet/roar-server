@@ -15,17 +15,8 @@ const fromBody = (ctx: IRouterContext, fieldName: string, type: 'string' | 'numb
 }
 
 const extractFiles = (ctx: IRouterContext, fieldName: string): ReadonlyArray<File> => {
-  const files = ctx.request.files
-  if (!files) {
-    return []
-  }
-
-  const maybeFile: undefined | File | ReadonlyArray<File> = files[fieldName]
-
-  if (!maybeFile) {
-    return []
-  }
-
+  const maybeFile: undefined | File | ReadonlyArray<File> = ctx.request.files?.[fieldName]
+  if (!maybeFile) return []
   return Array.isArray(maybeFile) ? maybeFile : [maybeFile]
 }
 
