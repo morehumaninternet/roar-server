@@ -4,7 +4,7 @@ import * as scrape from './scrape'
 import * as clearbit from './clearbit'
 import * as twitter from './twitter'
 import passport from './passport'
-
+import { File } from 'formidable'
 
 const fromBody = (ctx: IRouterContext, fieldName: string, type: 'string' | 'number' | 'boolean') => {
   const value = ctx.request.body[fieldName]
@@ -12,6 +12,12 @@ const fromBody = (ctx: IRouterContext, fieldName: string, type: 'string' | 'numb
     throw { status: 400, message: `Body must include ${fieldName}, a ${type}` }
   }
   return value
+}
+
+const extractFiles = (ctx: IRouterContext, fieldName: string): ReadonlyArray<File> => {
+  const maybeFile: undefined | File | ReadonlyArray<File> = ctx.request.files?.[fieldName]
+  if (!maybeFile) return []
+  return Array.isArray(maybeFile) ? maybeFile : [maybeFile]
 }
 
 const fromQuery = (ctx: IRouterContext, fieldName: string, type: 'string' = 'string') => {
@@ -91,6 +97,10 @@ export async function authTwitterFailure(ctx: IRouterContext): Promise<any> {
 
 export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
   const status = fromBody(ctx, 'status', 'string')
+  const screenshots = extractFiles(ctx, 'screenshots')
+  if (!screenshots.length) {
+    throw { status: 400, message: `Request must include screenshot files` }
+  }
 
   const user: Maybe<SerializedUser> = ctx.session?.passport?.user
 
@@ -98,8 +108,13 @@ export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
     throw { status: 401 }
   }
 
-  // TODO - handle response
-  await twitter.tweetStatus(status, user.token, user.tokenSecret)
+  const params = {
+    status,
+    screenshots,
+    access_token: user.token,
+    access_token_secret: user.tokenSecret
+  }
 
-  return Object.assign(ctx.response, { status: 200, body: {} })
+  const { url } = await twitter.tweetStatus(params)
+  return Object.assign(ctx.response, { status: 201, body: { url } })
 }
