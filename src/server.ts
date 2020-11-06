@@ -1,9 +1,10 @@
+// tslint:disable:no-expression-statement
 import * as Koa from 'koa'
 import bodyParser = require('koa-body')
 import * as session from 'koa-session'
 const cookieParser = require('koa-cookie')
-const helmet = require('koa-helmet')
-const RedisStore = require('koa-redis')
+// const helmet = require('koa-helmet')
+import sessionStore from './sessionStore'
 import passport from './passport'
 import * as middleware from './middleware'
 import router from './router'
@@ -27,12 +28,10 @@ server.use(bodyParser({ multipart: true, jsonLimit: '50mb' }))
 server.use(cookieParser.default())
 server.use(middleware.trackRequests)
 
-const redisOpts = process.env.REDIS_URL && { url: process.env.REDIS_URL }
-
 server.use(session({
   secure: true,
   sameSite: 'none',
-  store: new RedisStore(redisOpts),
+  store: sessionStore,
 }, server))
 
 server.use(passport.initialize())

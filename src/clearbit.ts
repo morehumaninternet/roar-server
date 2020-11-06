@@ -2,7 +2,7 @@ import * as assert from 'assert'
 import axios from 'axios'
 
 if (process.env.NODE_ENV !== 'test') {
-  assert.ok(process.env.CLEARBIT_SECRET_API_KEY)
+  assert.ok(process.env.CLEARBIT_SECRET_API_KEY) // tslint:disable-line:no-expression-statement
 }
 
 export async function getTwitterHandle(domain: string): Promise<null | string> {
