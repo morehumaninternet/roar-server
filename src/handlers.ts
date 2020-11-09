@@ -78,7 +78,7 @@ export async function authTwitterSuccess(ctx: IRouterContext): Promise<any> {
   ctx.type = 'html'
   ctx.body = `
     <script>
-      window.parent.postMessage({ type: 'twitter-auth-success', { avatarUrl: "" } }, '*');
+      window.parent.postMessage({ type: 'twitter-auth-success' }, '*');
     </script>
   `
   // tslint:enable: no-expression-statement
