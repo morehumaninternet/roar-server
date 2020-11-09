@@ -1,3 +1,5 @@
+import { promisify } from 'util'
+import { readFile as fsReadFile, writeFile } from 'fs'
 import { IRouterContext } from 'koa-router'
 import db from './db'
 import * as scrape from './scrape'
@@ -5,6 +7,8 @@ import * as clearbit from './clearbit'
 import * as twitter from './twitter'
 import passport from './passport'
 import { File } from 'formidable'
+
+const readFile = promisify(fsReadFile)
 
 const fromBody = (ctx: IRouterContext, fieldName: string, type: 'string' | 'number' | 'boolean') => {
   const value = ctx.request.body[fieldName]
@@ -78,7 +82,7 @@ export async function authTwitterSuccess(ctx: IRouterContext): Promise<any> {
   ctx.type = 'html'
   ctx.body = `
     <script>
-      window.parent.postMessage({ type: 'twitter-auth-success', { avatarUrl: "" } }, '*');
+      window.parent.postMessage({ type: 'twitter-auth-success' }, '*');
     </script>
   `
   // tslint:enable: no-expression-statement
@@ -108,13 +112,36 @@ export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
     throw { status: 401 }
   }
 
+  const [feedback] = await db<Feedback>('feedbacks').insert({ status, user_id: user.id }).returning('*')
+  const base64Screenshots = await Promise.all(
+    screenshots.map(async screenshot => {
+      const options = {
+        encoding: 'base64'
+      }
+      const base64Screenshot = await readFile(screenshot.path, options)
+
+      // tslint:disable-next-line: no-expression-statement
+      await db<Screenshot>('screenshots').insert({ name: screenshot.name, screenshot_file: base64Screenshot, feedback_id: feedback.id })
+      return base64Screenshot
+    })
+  )
+
   const params = {
     status,
-    screenshots,
+    screenshots: base64Screenshots,
     access_token: user.token,
     access_token_secret: user.tokenSecret
   }
 
-  const { url } = await twitter.tweetStatus(params)
+
+  // Write all screenshots to the current directory
+  // const scrshts = await db<Screenshot>('screenshots').select('*')
+  // scrshts.forEach(s => {
+  //   writeFile(`./${s.name}.png`, s.screenshot_file, { encoding: 'base64' }, () => {
+  //     console.log('saved')
+  //   })
+  // })
+
+  const { url } = { url: 'fake' } // await twitter.tweetStatus(params)
   return Object.assign(ctx.response, { status: 201, body: { url } })
 }
