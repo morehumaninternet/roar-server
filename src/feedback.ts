@@ -2,6 +2,7 @@ import { extname } from 'path'
 import { promisify } from 'util'
 import { readFile as fsReadFile } from 'fs'
 import { File } from 'formidable'
+import { flatten } from 'lodash'
 import db from './db'
 
 const readFile = promisify(fsReadFile)
@@ -14,32 +15,31 @@ type SaveFeedbackParam = {
   url: string
 }
 
-const saveFeedbackWebsite = async (host: string) => {
-  // tslint:disable-next-line: no-let
-  let [website] = await db<Website>('websites').select().where({ domain: host })
-  if (!website) {
-    // tslint:disable-next-line: no-expression-statement
-    [website] = await db<Website>('Websites').insert({ domain: host }).returning('*')
-  }
-
-  return website
-}
-
-const saveFeedbackImages = async (imagesData: ReadonlyArray<FeedbackImageData>, feedback: Feedback) => {
-  const feedbackImageDBData = await Promise.all(
-    imagesData.map(async imageData => {
-      return { ...imageData, feedback_id: feedback.id }
-    })
-  )
-  // tslint:disable-next-line: no-expression-statement
-  return db<FeedbackImage>('feedback_images').insert(feedbackImageDBData).returning('*')
-}
-
 const saveFeedback = async ({ user, status, host, imagesData, url }: SaveFeedbackParam) => {
-  const website = await saveFeedbackWebsite(host)
-  const [feedback] = await db<Feedback>('feedback').insert({ status, user_id: user.id, website_id: website.id, tweet_url: url }).returning('*')
+  const insertFeedbackSql = `
+WITH inserted_website(id) as (
+  INSERT INTO websites(domain)
+       VALUES (?)
+  ON CONFLICT(domain) DO UPDATE SET domain=EXCLUDED.domain
+    RETURNING id
+),
+inserted_feedback(id) as (
+  INSERT INTO feedback (user_id, website_id, status, tweet_url)
+       VALUES (?, (SELECT id from inserted_website), ?, ?)
+    RETURNING id
+)
+INSERT INTO feedback_images (feedback_id, name, file, file_extension)
+      VALUES ${Array(imagesData.length).fill(
+    '((select id from inserted_feedback), ?, ?, ?)'
+  ).join(',')
+    }
+`
+
+  const defaultQueryArgs: ReadonlyArray<any> = [host, user.id, status, url]
+  const imagesQueryArgs = flatten(imagesData.map(imageData => [imageData.name, imageData.file, imageData.file_extension]))
+  const queryArgs = defaultQueryArgs.concat(imagesQueryArgs)
   // tslint:disable-next-line: no-expression-statement
-  await saveFeedbackImages(imagesData, feedback)
+  await db.raw(insertFeedbackSql, queryArgs)
 }
 
 const extractImageData = (screenshots: ReadonlyArray<File>): Promise<ReadonlyArray<FeedbackImageData>> => {
