@@ -1,14 +1,12 @@
-import { promisify } from 'util'
-import { readFile as fsReadFile, writeFile } from 'fs'
 import { IRouterContext } from 'koa-router'
+import { File } from 'formidable'
 import db from './db'
 import * as scrape from './scrape'
 import * as clearbit from './clearbit'
 import * as twitter from './twitter'
 import passport from './passport'
-import { File } from 'formidable'
-
-const readFile = promisify(fsReadFile)
+import { saveFeedback, updateTweetURL } from './feedback'
+const upsert = require('knex-upsert')
 
 const fromBody = (ctx: IRouterContext, fieldName: string, type: 'string' | 'number' | 'boolean') => {
   const value = ctx.request.body[fieldName]
@@ -44,6 +42,14 @@ const hostOf = (url: string): string => {
   }
 }
 
+function getCurrentUser(ctx: IRouterContext): SerializedUser {
+  const user: Maybe<SerializedUser> = ctx.session?.passport?.user
+  if (!user) {
+    throw { status: 401 }
+  }
+  return user
+}
+
 export async function getWebsite(ctx: IRouterContext): Promise<any> {
   const domain = hostOf(fromQuery(ctx, 'domain'))
 
@@ -58,8 +64,12 @@ export async function getWebsite(ctx: IRouterContext): Promise<any> {
   // Insert the row no matter what
   // TODO: implement logic to scrape & try clearbit again if the last fetch was done awhile ago
   // tslint:disable-next-line: no-expression-statement
-  // TODO - upsert!!!!
-  await db('websites').insert({ domain, twitter_handle: twitterHandle })
+  await upsert({
+    db,
+    table: 'websites',
+    object: { domain, twitter_handle: twitterHandle },
+    key: 'domain'
+  })
 
   return Object.assign(ctx.response, { status: 200, body: { domain, twitter_handle: twitterHandle } })
 }
@@ -79,9 +89,7 @@ export const authTwitterCallback = passport.authenticate('twitter', {
 })
 
 export async function authTwitterSuccess(ctx: IRouterContext): Promise<any> {
-  const user: Maybe<SerializedUser> = ctx.session?.passport?.user
-
-  if (!user) throw { status: 401 }
+  const user = getCurrentUser(ctx)
 
   const event = { type: 'twitter-auth-success', photoUrl: user.photo }
 
@@ -106,6 +114,16 @@ export async function authTwitterFailure(ctx: IRouterContext): Promise<any> {
   // tslint:enable: no-expression-statement
 }
 
+// tslint:disable-next-line: typedef
+function buildTweetParams(user: SerializedUser, status: string, feedbackImages: ReadonlyArray<FeedbackImage>) {
+  return {
+    status,
+    feedback_images: feedbackImages.map(feedbackImage => feedbackImage.file),
+    access_token: user.token,
+    access_token_secret: user.tokenSecret
+  }
+}
+
 export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
   const status = fromBody(ctx, 'status', 'string')
   const host = fromBody(ctx, 'host', 'string')
@@ -114,50 +132,13 @@ export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
     throw { status: 400, message: `Request must include screenshot files` }
   }
 
-  const user: Maybe<SerializedUser> = ctx.session?.passport?.user
+  const user = getCurrentUser(ctx)
+  const { feedback, feedbackImages } = await saveFeedback(user, status, host, screenshots)
+  const { url } = await twitter.tweetStatus(buildTweetParams(user, status, feedbackImages))
 
-  if (!user) {
-    throw { status: 401 }
-  }
-
-  // Insert the host to the website table if it doesn't exist
-  // or get the website ID
-  // TODO - upsert!
-  const [website_id]: ReadonlyArray<number> = await db('websites').select('id').where({ domain: host })
-
-  // Insert the feedback to the feedbacks table
-  const [feedback] = await db<Feedback>('feedbacks').insert({ status, user_id: user.id, website_id }).returning('*')
-
-  // Generate feedback images data and insert them to the database
-  const feedbackImageDBData: ReadonlyArray<FeedbackImageInsert> = await Promise.all(
-    screenshots.map(async screenshot => {
-      const FileBuffer = await readFile(screenshot.path)
-      return { name: screenshot.name, file: FileBuffer, feedback_id: feedback.id }
-    })
-  )
+  // TODO - what should we do if the update fail? Should we do something? Currently we're not even awaiting it
   // tslint:disable-next-line: no-expression-statement
-  await db<FeedbackImage>('feedback_images').insert(feedbackImageDBData)
+  updateTweetURL(feedback, url)
 
-  const params = {
-    status,
-    feedback_images: feedbackImageDBData.map(feedbackImage => feedbackImage.file),
-    access_token: user.token,
-    access_token_secret: user.tokenSecret
-  }
-
-
-  // TODO - persist the website per feedback
-  // TODO - add tweet_url to the database object
-  // TODO - cleanup and refactor
-
-  // Write all screenshots to the current directory
-  // const scrshts = await db<Screenshot>('screenshots').select('*')
-  // scrshts.forEach(s => {
-  //   writeFile(`./${s.name}.png`, s.screenshot_file, { encoding: 'base64' }, () => {
-  //     console.log('saved')
-  //   })
-  // })
-
-  const { url } = { url: 'fake' } // await twitter.tweetStatus(params)
   return Object.assign(ctx.response, { status: 201, body: { url } })
 }
