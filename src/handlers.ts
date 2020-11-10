@@ -1,10 +1,12 @@
 import { IRouterContext } from 'koa-router'
+import { File } from 'formidable'
 import db from './db'
 import * as scrape from './scrape'
 import * as clearbit from './clearbit'
 import * as twitter from './twitter'
 import passport from './passport'
-import { File } from 'formidable'
+import { saveFeedback, extractImageData } from './feedback'
+const upsert = require('knex-upsert')
 
 const fromBody = (ctx: IRouterContext, fieldName: string, type: 'string' | 'number' | 'boolean') => {
   const value = ctx.request.body[fieldName]
@@ -40,12 +42,20 @@ const hostOf = (url: string): string => {
   }
 }
 
+function getCurrentUser(ctx: IRouterContext): SerializedUser {
+  const user: Maybe<SerializedUser> = ctx.session?.passport?.user
+  if (!user) {
+    throw { status: 401 }
+  }
+  return user
+}
+
 export async function getWebsite(ctx: IRouterContext): Promise<any> {
   const domain = hostOf(fromQuery(ctx, 'domain'))
 
   const [websiteRow] = await db.from('websites').select('twitter_handle').where({ domain })
 
-  if (websiteRow) {
+  if (websiteRow && websiteRow.twitter_handle) {
     return Object.assign(ctx.response, { status: 200, body: { domain, twitter_handle: websiteRow.twitter_handle } })
   }
 
@@ -54,7 +64,12 @@ export async function getWebsite(ctx: IRouterContext): Promise<any> {
   // Insert the row no matter what
   // TODO: implement logic to scrape & try clearbit again if the last fetch was done awhile ago
   // tslint:disable-next-line: no-expression-statement
-  await db('websites').insert({ domain, twitter_handle: twitterHandle })
+  await upsert({
+    db,
+    table: 'websites',
+    object: { domain, twitter_handle: twitterHandle },
+    key: 'domain'
+  })
 
   return Object.assign(ctx.response, { status: 200, body: { domain, twitter_handle: twitterHandle } })
 }
@@ -74,9 +89,7 @@ export const authTwitterCallback = passport.authenticate('twitter', {
 })
 
 export async function authTwitterSuccess(ctx: IRouterContext): Promise<any> {
-  const user: Maybe<SerializedUser> = ctx.session?.passport?.user
-
-  if (!user) throw { status: 401 }
+  const user = getCurrentUser(ctx)
 
   const event = { type: 'twitter-auth-success', photoUrl: user.photo }
 
@@ -101,26 +114,29 @@ export async function authTwitterFailure(ctx: IRouterContext): Promise<any> {
   // tslint:enable: no-expression-statement
 }
 
+// tslint:disable-next-line: typedef
+function buildTweetParams(user: SerializedUser, status: string, imagesData: ReadonlyArray<FeedbackImageData>) {
+  return {
+    status,
+    feedback_images: imagesData.map(imageData => imageData.file),
+    access_token: user.token,
+    access_token_secret: user.tokenSecret
+  }
+}
+
 export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
   const status = fromBody(ctx, 'status', 'string')
+  const host = fromBody(ctx, 'host', 'string')
   const screenshots = extractFiles(ctx, 'screenshots')
   if (!screenshots.length) {
     throw { status: 400, message: `Request must include screenshot files` }
   }
 
-  const user: Maybe<SerializedUser> = ctx.session?.passport?.user
+  const user = getCurrentUser(ctx)
+  const imagesData = await extractImageData(screenshots)
+  const { url } = await twitter.tweetStatus(buildTweetParams(user, status, imagesData))
+  // tslint:disable-next-line: no-expression-statement
+  saveFeedback({ user, status, host, imagesData, url })
 
-  if (!user) {
-    throw { status: 401 }
-  }
-
-  const params = {
-    status,
-    screenshots,
-    access_token: user.token,
-    access_token_secret: user.tokenSecret
-  }
-
-  const { url } = await twitter.tweetStatus(params)
   return Object.assign(ctx.response, { status: 201, body: { url } })
 }

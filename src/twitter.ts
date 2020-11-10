@@ -1,13 +1,8 @@
-import { promisify } from 'util'
-import { readFile as fsReadFile } from 'fs'
 import * as Twit from 'twit'
-import { File } from 'formidable'
-
-const readFile = promisify(fsReadFile)
 
 type TweetStatusArgs = {
     status: string,
-    screenshots: ReadonlyArray<File>,
+    feedback_images: ReadonlyArray<Buffer>,
     access_token: string,
     access_token_secret: string
 }
@@ -16,7 +11,7 @@ type TweetResponse = {
     url: string
 }
 
-export const tweetStatus = async ({ status, screenshots, access_token, access_token_secret }: TweetStatusArgs): Promise<TweetResponse> => {
+export const tweetStatus = async ({ status, feedback_images, access_token, access_token_secret }: TweetStatusArgs): Promise<TweetResponse> => {
 
     const T = new Twit({
         consumer_key: process.env.TWITTER_API_KEY!,
@@ -27,12 +22,8 @@ export const tweetStatus = async ({ status, screenshots, access_token, access_to
     })
 
     const media_ids = await Promise.all(
-        screenshots.map(async screenshot => {
-            const options = {
-                encoding: 'base64'
-            }
-            const base64Screenshot = await readFile(screenshot.path, options)
-            const { data } = await T.post('media/upload', { media_data: base64Screenshot })
+        feedback_images.map(async feedback_image => {
+            const { data } = await T.post('media/upload', { media_data: feedback_image.toString('base64') })
             return (data as any).media_id_string
         })
     )
