@@ -18,7 +18,7 @@ exports.up = async (knex) => {
       .onDelete("CASCADE")
       .index()
     table.string("status").notNullable()
-    table.string("tweet_url")
+    table.string("tweet_url").notNullable().unique()
     table.timestamps(true, true)
   })
 

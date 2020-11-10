@@ -3,7 +3,7 @@ type Feedback = {
   status: string,
   user_id: number,
   website_id: number,
-  tweet_url?: string,
+  tweet_url: string,
   created_at: Date,
   updated_at: Date
 }
