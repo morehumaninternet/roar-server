@@ -2,15 +2,20 @@ type Feedback = {
   id: number,
   status: string,
   user_id: number,
+  website_id: number,
+  tweet_url?: string,
   created_at: Date,
   updated_at: Date
 }
 
-type Screenshot = {
-  id: number,
+type FeedbackImageInsert = {
   name: string
-  screenshot_file: string,
+  file: Buffer,
   feedback_id: number,
+}
+
+type FeedbackImage = FeedbackImageInsert & {
+  id: number,
   created_at: Date,
   updated_at: Date
 }

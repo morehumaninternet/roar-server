@@ -49,7 +49,7 @@ export async function getWebsite(ctx: IRouterContext): Promise<any> {
 
   const [websiteRow] = await db.from('websites').select('twitter_handle').where({ domain })
 
-  if (websiteRow) {
+  if (websiteRow && websiteRow.twitter_handle) {
     return Object.assign(ctx.response, { status: 200, body: { domain, twitter_handle: websiteRow.twitter_handle } })
   }
 
@@ -58,6 +58,7 @@ export async function getWebsite(ctx: IRouterContext): Promise<any> {
   // Insert the row no matter what
   // TODO: implement logic to scrape & try clearbit again if the last fetch was done awhile ago
   // tslint:disable-next-line: no-expression-statement
+  // TODO - upsert!!!!
   await db('websites').insert({ domain, twitter_handle: twitterHandle })
 
   return Object.assign(ctx.response, { status: 200, body: { domain, twitter_handle: twitterHandle } })
@@ -101,6 +102,7 @@ export async function authTwitterFailure(ctx: IRouterContext): Promise<any> {
 
 export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
   const status = fromBody(ctx, 'status', 'string')
+  const host = fromBody(ctx, 'host', 'string')
   const screenshots = extractFiles(ctx, 'screenshots')
   if (!screenshots.length) {
     throw { status: 400, message: `Request must include screenshot files` }
@@ -112,27 +114,35 @@ export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
     throw { status: 401 }
   }
 
-  const [feedback] = await db<Feedback>('feedbacks').insert({ status, user_id: user.id }).returning('*')
-  const base64Screenshots = await Promise.all(
-    screenshots.map(async screenshot => {
-      const options = {
-        encoding: 'base64'
-      }
-      const base64Screenshot = await readFile(screenshot.path, options)
+  // Insert the host to the website table if it doesn't exist
+  // or get the website ID
+  // TODO - upsert!
+  const [website_id]: ReadonlyArray<number> = await db('websites').select('id').where({ domain: host })
 
-      // tslint:disable-next-line: no-expression-statement
-      await db<Screenshot>('screenshots').insert({ name: screenshot.name, screenshot_file: base64Screenshot, feedback_id: feedback.id })
-      return base64Screenshot
+  // Insert the feedback to the feedbacks table
+  const [feedback] = await db<Feedback>('feedbacks').insert({ status, user_id: user.id, website_id }).returning('*')
+
+  // Generate feedback images data and insert them to the database
+  const feedbackImageDBData: ReadonlyArray<FeedbackImageInsert> = await Promise.all(
+    screenshots.map(async screenshot => {
+      const FileBuffer = await readFile(screenshot.path)
+      return { name: screenshot.name, file: FileBuffer, feedback_id: feedback.id }
     })
   )
+  // tslint:disable-next-line: no-expression-statement
+  await db<FeedbackImage>('feedback_images').insert(feedbackImageDBData)
 
   const params = {
     status,
-    screenshots: base64Screenshots,
+    feedback_images: feedbackImageDBData.map(feedbackImage => feedbackImage.file),
     access_token: user.token,
     access_token_secret: user.tokenSecret
   }
 
+
+  // TODO - persist the website per feedback
+  // TODO - add tweet_url to the database object
+  // TODO - cleanup and refactor
 
   // Write all screenshots to the current directory
   // const scrshts = await db<Screenshot>('screenshots').select('*')

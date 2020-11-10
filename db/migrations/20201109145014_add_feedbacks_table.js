@@ -10,7 +10,15 @@ exports.up = async (knex) => {
       .inTable("users")
       .onDelete("CASCADE")
       .index()
+    table
+      .integer("website_id")
+      .notNullable()
+      .references("id")
+      .inTable("websites")
+      .onDelete("CASCADE")
+      .index()
     table.string("status").notNullable()
+    table.string("tweet_url")
     table.timestamps(true, true)
   })
 
