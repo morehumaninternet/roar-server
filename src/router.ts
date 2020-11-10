@@ -10,6 +10,7 @@ const v1Router = new Router()
   .get('/auth/twitter/success', handlers.authTwitterSuccess)
   .get('/auth/twitter/failure', handlers.authTwitterFailure)
   .post('/feedback', handlers.postFeedback)
+  .get('/fail', () => { throw new Error('Failure!') })
 
 const router = new Router()
   .get(`/health-check`, ({ response }) => Object.assign(response, { status: 200, body: 'OK' }))
