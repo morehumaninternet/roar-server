@@ -2,11 +2,6 @@ import * as passport from 'koa-passport'
 import * as passportTwitter from 'passport-twitter'
 import * as users from './users'
 
-type PassportReturn = {
-  dbUser: User
-  token: string
-  tokenSecret: string
-}
 
 const host = process.env.NODE_ENV === 'prod'
   ? 'https://roar-server.herokuapp.com'
@@ -15,9 +10,7 @@ const host = process.env.NODE_ENV === 'prod'
 const callbackURL = `${host}/v1/auth/twitter/callback`
 
 // tslint:disable-next-line: no-expression-statement
-passport.serializeUser((user: PassportReturn, done: Done<SerializedUser>) => (
-  done(null, { id: user.dbUser.id, token: user.token, tokenSecret: user.tokenSecret })
-))
+passport.serializeUser((user: SerializedUser, done: Done<SerializedUser>) => done(null, user))
 
 // tslint:disable-next-line: no-expression-statement
 passport.deserializeUser(async (serializedUser: SerializedUser, done: Done<User>) => {
@@ -37,13 +30,18 @@ passport.use(new passportTwitter.Strategy({
   callbackURL,
   consumerKey: process.env.TWITTER_API_KEY!,
   consumerSecret: process.env.TWITTER_KEY_SECRET!,
-}, async (token, tokenSecret, profile, done: Done<PassportReturn>) => {
+}, async (token, tokenSecret, profile, done: Done<SerializedUser>) => {
   // This function is called only when the user tries to login with Twitter.
   // The user might already exist in our database or a new user should be created.
 
-  const dbUser: User = await users.fetchUserByTwitterId(profile.id) || await users.createUserFromTwitterProfile(profile)
+  const dbUser: User = await users.upsertWithTwitterProfile(profile)
 
-  return done(null, { dbUser, token, tokenSecret })
+  return done(null, {
+    id: dbUser.id,
+    photo: dbUser.photo,
+    token,
+    tokenSecret
+  })
 }))
 
 export default passport

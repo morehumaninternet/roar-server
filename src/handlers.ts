@@ -79,11 +79,17 @@ export const authTwitterCallback = passport.authenticate('twitter', {
 })
 
 export async function authTwitterSuccess(ctx: IRouterContext): Promise<any> {
+  const user: Maybe<SerializedUser> = ctx.session?.passport?.user
+
+  if (!user) throw { status: 401 }
+
+  const event = { type: 'twitter-auth-success', photoUrl: user.photo }
+
   // tslint:disable: no-expression-statement
   ctx.type = 'html'
   ctx.body = `
     <script>
-      window.parent.postMessage({ type: 'twitter-auth-success' }, '*');
+      window.parent.postMessage(${JSON.stringify(event)}, '*');
     </script>
   `
   // tslint:enable: no-expression-statement
