@@ -8,14 +8,15 @@ type Feedback = {
   updated_at: Date
 }
 
-type FeedbackImageInsert = {
-  name: string
+type FeedbackImageData = {
+  name: string,
   file: Buffer,
-  feedback_id: number,
+  file_extension: string
 }
 
-type FeedbackImage = FeedbackImageInsert & {
+type FeedbackImage = FeedbackImageData & {
   id: number,
+  feedback_id: number,
   created_at: Date,
   updated_at: Date
 }

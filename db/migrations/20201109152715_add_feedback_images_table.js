@@ -8,10 +8,11 @@ exports.up = async (knex) => {
       .integer("feedback_id")
       .notNullable()
       .references("id")
-      .inTable("feedbacks")
+      .inTable("feedback")
       .onDelete("CASCADE")
       .index()
     table.binary("file").notNullable()
+    table.string("file_extension").notNullable()
     table.timestamps(true, true)
   })
 

@@ -5,7 +5,7 @@ import * as scrape from './scrape'
 import * as clearbit from './clearbit'
 import * as twitter from './twitter'
 import passport from './passport'
-import { saveFeedback, updateTweetURL } from './feedback'
+import { saveFeedback, extractImageData } from './feedback'
 const upsert = require('knex-upsert')
 
 const fromBody = (ctx: IRouterContext, fieldName: string, type: 'string' | 'number' | 'boolean') => {
@@ -115,10 +115,10 @@ export async function authTwitterFailure(ctx: IRouterContext): Promise<any> {
 }
 
 // tslint:disable-next-line: typedef
-function buildTweetParams(user: SerializedUser, status: string, feedbackImages: ReadonlyArray<FeedbackImage>) {
+function buildTweetParams(user: SerializedUser, status: string, imagesData: ReadonlyArray<FeedbackImageData>) {
   return {
     status,
-    feedback_images: feedbackImages.map(feedbackImage => feedbackImage.file),
+    feedback_images: imagesData.map(imageData => imageData.file),
     access_token: user.token,
     access_token_secret: user.tokenSecret
   }
@@ -133,12 +133,10 @@ export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
   }
 
   const user = getCurrentUser(ctx)
-  const { feedback, feedbackImages } = await saveFeedback(user, status, host, screenshots)
-  const { url } = await twitter.tweetStatus(buildTweetParams(user, status, feedbackImages))
-
-  // TODO - what should we do if the update fail? Should we do something? Currently we're not even awaiting it
+  const imagesData = await extractImageData(screenshots)
+  const { url } = await twitter.tweetStatus(buildTweetParams(user, status, imagesData))
   // tslint:disable-next-line: no-expression-statement
-  updateTweetURL(feedback, url)
+  saveFeedback({ user, status, host, imagesData, url })
 
   return Object.assign(ctx.response, { status: 201, body: { url } })
 }

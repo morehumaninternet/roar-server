@@ -1,9 +1,18 @@
+import { extname } from 'path'
 import { promisify } from 'util'
 import { readFile as fsReadFile } from 'fs'
 import { File } from 'formidable'
 import db from './db'
 
 const readFile = promisify(fsReadFile)
+
+type SaveFeedbackParam = {
+  user: SerializedUser,
+  status: string,
+  host: string,
+  imagesData: ReadonlyArray<FeedbackImageData>,
+  url: string
+}
 
 const saveFeedbackWebsite = async (host: string) => {
   // tslint:disable-next-line: no-let
@@ -16,27 +25,30 @@ const saveFeedbackWebsite = async (host: string) => {
   return website
 }
 
-const saveFeedbackImages = async (screenshots: ReadonlyArray<File>, feedback: Feedback) => {
-  const feedbackImageDBData: ReadonlyArray<FeedbackImageInsert> = await Promise.all(
-    screenshots.map(async screenshot => {
-      const FileBuffer = await readFile(screenshot.path)
-      return { name: screenshot.name, file: FileBuffer, feedback_id: feedback.id }
+const saveFeedbackImages = async (imagesData: ReadonlyArray<FeedbackImageData>, feedback: Feedback) => {
+  const feedbackImageDBData = await Promise.all(
+    imagesData.map(async imageData => {
+      return { ...imageData, feedback_id: feedback.id }
     })
   )
   // tslint:disable-next-line: no-expression-statement
-  const feedbackImages = await db<FeedbackImage>('feedback_images').insert(feedbackImageDBData).returning('*')
-  return feedbackImages
+  return db<FeedbackImage>('feedback_images').insert(feedbackImageDBData).returning('*')
 }
 
-const saveFeedback = async (user: SerializedUser, status: string, host: string, screenshots: ReadonlyArray<File>) => {
+const saveFeedback = async ({ user, status, host, imagesData, url }: SaveFeedbackParam) => {
   const website = await saveFeedbackWebsite(host)
-  const [feedback] = await db<Feedback>('feedbacks').insert({ status, user_id: user.id, website_id: website.id }).returning('*')
-  const feedbackImages = await saveFeedbackImages(screenshots, feedback)
-  return { website, feedback, feedbackImages }
+  const [feedback] = await db<Feedback>('feedback').insert({ status, user_id: user.id, website_id: website.id, tweet_url: url }).returning('*')
+  // tslint:disable-next-line: no-expression-statement
+  await saveFeedbackImages(imagesData, feedback)
 }
 
-const updateTweetURL = (feedback: Feedback, url: string) => {
-  return db('feedbacks').where({ id: feedback.id }).update({ tweet_url: url })
+const extractImageData = (screenshots: ReadonlyArray<File>): Promise<ReadonlyArray<FeedbackImageData>> => {
+  return Promise.all(
+    screenshots.map(async screenshot => {
+      const fileBuffer = await readFile(screenshot.path)
+      return { name: screenshot.name, file: fileBuffer, file_extension: extname(screenshot.name) }
+    })
+  )
 }
 
-export { saveFeedback, updateTweetURL }
+export { saveFeedback, extractImageData }

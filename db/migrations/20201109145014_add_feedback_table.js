@@ -1,7 +1,7 @@
 const { addUpdateTsTrigger } = require("../util")
 
 exports.up = async (knex) => {
-  await knex.schema.createTable("feedbacks", (table) => {
+  await knex.schema.createTable("feedback", (table) => {
     table.increments()
     table
       .integer("user_id")
@@ -22,9 +22,9 @@ exports.up = async (knex) => {
     table.timestamps(true, true)
   })
 
-  await addUpdateTsTrigger(knex, "feedbacks")
+  await addUpdateTsTrigger(knex, "feedback")
 }
 
 exports.down = function (knex) {
-  return knex.schema.dropTable("feedbacks")
+  return knex.schema.dropTable("feedback")
 }
