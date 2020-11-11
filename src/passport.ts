@@ -30,6 +30,7 @@ passport.use(new passportTwitter.Strategy({
   callbackURL,
   consumerKey: process.env.TWITTER_API_KEY!,
   consumerSecret: process.env.TWITTER_KEY_SECRET!,
+  includeEmail: true
 }, async (token, tokenSecret, profile, done: Done<SerializedUser>) => {
   // This function is called only when the user tries to login with Twitter.
   // The user might already exist in our database or a new user should be created.

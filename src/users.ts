@@ -28,7 +28,7 @@ export function upsertWithTwitterProfile(profile: TwitterProfile): Promise<User>
       twitter_handle: profile.username,
       display_name: profile.displayName,
       photo: photo(profile),
-      email: profile.emails && profile.emails[0].value
+      email: profile.emails && profile.emails[0]?.value
     },
     key: 'twitter_id',
   })
