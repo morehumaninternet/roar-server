@@ -42,11 +42,11 @@ INSERT INTO feedback_images (feedback_id, name, file, file_extension)
   await db.raw(insertFeedbackSql, queryArgs)
 }
 
-const extractImageData = (screenshots: ReadonlyArray<File>): Promise<ReadonlyArray<FeedbackImageData>> => {
+const extractImageData = (images: ReadonlyArray<File>): Promise<ReadonlyArray<FeedbackImageData>> => {
   return Promise.all(
-    screenshots.map(async screenshot => {
-      const fileBuffer = await readFile(screenshot.path)
-      return { name: screenshot.name, file: fileBuffer, file_extension: extname(screenshot.name) }
+    images.map(async image => {
+      const fileBuffer = await readFile(image.path)
+      return { name: image.name, file: fileBuffer, file_extension: extname(image.name) }
     })
   )
 }
