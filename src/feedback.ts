@@ -10,12 +10,12 @@ const readFile = promisify(fsReadFile)
 type SaveFeedbackParam = {
   user: SerializedUser,
   status: string,
-  host: string,
+  domain: string,
   imagesData: ReadonlyArray<FeedbackImageData>,
   url: string
 }
 
-const saveFeedback = async ({ user, status, host, imagesData, url }: SaveFeedbackParam) => {
+const saveFeedback = async ({ user, status, domain, imagesData, url }: SaveFeedbackParam) => {
   const insertFeedbackSql = `
 WITH inserted_website(id) as (
   INSERT INTO websites(domain)
@@ -35,7 +35,7 @@ INSERT INTO feedback_images (feedback_id, name, file, file_extension)
     }
 `
 
-  const defaultQueryArgs: ReadonlyArray<any> = [host, user.id, status, url]
+  const defaultQueryArgs: ReadonlyArray<any> = [domain, user.id, status, url]
   const imagesQueryArgs = flatten(imagesData.map(imageData => [imageData.name, imageData.file, imageData.file_extension]))
   const queryArgs = defaultQueryArgs.concat(imagesQueryArgs)
   // tslint:disable-next-line: no-expression-statement
