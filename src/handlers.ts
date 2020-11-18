@@ -127,13 +127,14 @@ function buildTweetParams(user: SerializedUser, status: string, imagesData: Read
 export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
   const status = fromBody(ctx, 'status', 'string')
   const host = fromBody(ctx, 'host', 'string')
-  const screenshots = extractFiles(ctx, 'screenshots')
-  if (!screenshots.length) {
-    throw { status: 400, message: `Request must include screenshot files` }
+  // Support images under the field name 'images' or 'screenshots'
+  const images = extractFiles(ctx, 'images').concat(extractFiles(ctx, 'screenshots'))
+  if (!images.length) {
+    throw { status: 400, message: `Request must include image files` }
   }
 
   const user = getCurrentUser(ctx)
-  const imagesData = await extractImageData(screenshots)
+  const imagesData = await extractImageData(images)
   const { url } = await twitter.tweetStatus(buildTweetParams(user, status, imagesData))
   // tslint:disable-next-line: no-expression-statement
   saveFeedback({ user, status, host, imagesData, url })
