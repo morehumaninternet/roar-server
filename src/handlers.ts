@@ -6,7 +6,7 @@ import * as clearbit from './clearbit'
 import * as twitter from './twitter'
 import passport from './passport'
 import { saveFeedback, extractImageData } from './feedback'
-const upsert = require('knex-upsert')
+import { upsertWebsite } from './websites'
 
 const fromBody = (ctx: IRouterContext, fieldName: string, type: 'string' | 'number' | 'boolean') => {
   const value = ctx.request.body[fieldName]
@@ -42,6 +42,11 @@ const hostOf = (url: string): string => {
   }
 }
 
+const domainOf = (url: string): string => {
+  const host = hostOf(url)
+  return host.replace(/^www\./, '')
+}
+
 function getCurrentUser(ctx: IRouterContext): SerializedUser {
   const user: Maybe<SerializedUser> = ctx.session?.passport?.user
   if (!user) {
@@ -51,7 +56,7 @@ function getCurrentUser(ctx: IRouterContext): SerializedUser {
 }
 
 export async function getWebsite(ctx: IRouterContext): Promise<any> {
-  const domain = hostOf(fromQuery(ctx, 'domain'))
+  const domain = domainOf(fromQuery(ctx, 'domain'))
 
   const [websiteRow] = await db.from('websites').select('twitter_handle').where({ domain })
 
@@ -64,12 +69,7 @@ export async function getWebsite(ctx: IRouterContext): Promise<any> {
   // Insert the row no matter what
   // TODO: implement logic to scrape & try clearbit again if the last fetch was done awhile ago
   // tslint:disable-next-line: no-expression-statement
-  await upsert({
-    db,
-    table: 'websites',
-    object: { domain, twitter_handle: twitterHandle },
-    key: 'domain'
-  })
+  await upsertWebsite({ domain, twitter_handle: twitterHandle })
 
   return Object.assign(ctx.response, { status: 200, body: { domain, twitter_handle: twitterHandle } })
 }
@@ -126,7 +126,14 @@ function buildTweetParams(user: SerializedUser, status: string, imagesData: Read
 
 export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
   const status = fromBody(ctx, 'status', 'string')
-  const host = fromBody(ctx, 'host', 'string')
+
+  const hostOrDomain = ctx.body.domain || ctx.body.host
+  if (!hostOrDomain || typeof hostOrDomain !== 'string') {
+    throw { status: 400, message: `Body must include domain, a string` }
+  }
+
+  const domain = domainOf(hostOrDomain)
+
   // Support images under the field name 'images' or 'screenshots'
   const images = extractFiles(ctx, 'images').concat(extractFiles(ctx, 'screenshots'))
   if (!images.length) {
@@ -137,7 +144,7 @@ export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
   const imagesData = await extractImageData(images)
   const { url } = await twitter.tweetStatus(buildTweetParams(user, status, imagesData))
   // tslint:disable-next-line: no-expression-statement
-  saveFeedback({ user, status, host, imagesData, url })
+  saveFeedback({ user, status, domain, imagesData, url })
 
   return Object.assign(ctx.response, { status: 201, body: { url } })
 }
