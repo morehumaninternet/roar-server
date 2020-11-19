@@ -127,7 +127,7 @@ function buildTweetParams(user: SerializedUser, status: string, imagesData: Read
 export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
   const status = fromBody(ctx, 'status', 'string')
 
-  const hostOrDomain = ctx.body.domain || ctx.body.host
+  const hostOrDomain = ctx.request.body.domain || ctx.request.body.host
   if (!hostOrDomain || typeof hostOrDomain !== 'string') {
     throw { status: 400, message: `Body must include domain, a string` }
   }
