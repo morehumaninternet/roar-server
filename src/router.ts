@@ -9,6 +9,7 @@ const v1Router = new Router()
   .get('/auth/twitter/callback', handlers.authTwitterCallback)
   .get('/auth/twitter/success', handlers.authTwitterSuccess)
   .get('/auth/twitter/failure', handlers.authTwitterFailure)
+  .get('/me', handlers.getMe)
   .post('/feedback', handlers.postFeedback)
   .get('/fail', () => { throw new Error('Failure!') })
 

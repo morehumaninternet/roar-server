@@ -114,6 +114,11 @@ export async function authTwitterFailure(ctx: IRouterContext): Promise<any> {
   // tslint:enable: no-expression-statement
 }
 
+export function getMe(ctx: IRouterContext): any {
+  const me = getCurrentUser(ctx)
+  return Object.assign(ctx.response, { status: 200, body: { photoUrl: me.photo } })
+}
+
 // tslint:disable-next-line: typedef
 function buildTweetParams(user: SerializedUser, status: string, imagesData: ReadonlyArray<FeedbackImageData>) {
   return {
