@@ -11,6 +11,7 @@ const v1Router = new Router()
   .get('/auth/twitter/failure', handlers.authTwitterFailure)
   .get('/me', handlers.getMe)
   .post('/feedback', handlers.postFeedback)
+  .get('/logout', handlers.logout)
   .get('/fail', () => { throw new Error('Failure!') })
 
 const router = new Router()
