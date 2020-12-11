@@ -156,5 +156,5 @@ export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
 
 export async function logout(ctx: IRouterContext): Promise<any> {
   ctx.session = null // tslint:disable-line: no-expression-statement
-  return Object.assign(ctx.response, { status: 200 })
+  return Object.assign(ctx.response, { status: 200, body: { loggedOut: true } })
 }
