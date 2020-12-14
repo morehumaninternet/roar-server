@@ -50,7 +50,7 @@ const domainOf = (url: string): string => {
 function getCurrentUser(ctx: IRouterContext): SerializedUser {
   const user: Maybe<SerializedUser> = ctx.session?.passport?.user
   if (!user) {
-    throw { status: 401 }
+    throw { status: 401, message: 'Unauthorized' }
   }
   return user
 }
@@ -156,5 +156,5 @@ export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
 
 export async function logout(ctx: IRouterContext): Promise<any> {
   ctx.session = null // tslint:disable-line: no-expression-statement
-  return Object.assign(ctx.response, { status: 200 })
+  return Object.assign(ctx.response, { status: 200, body: { loggedOut: true } })
 }
