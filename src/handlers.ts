@@ -141,9 +141,6 @@ export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
 
   // Support images under the field name 'images' or 'screenshots'
   const images = extractFiles(ctx, 'images').concat(extractFiles(ctx, 'screenshots'))
-  if (!images.length) {
-    throw { status: 400, message: `Request must include image files` }
-  }
 
   const user = getCurrentUser(ctx)
   const imagesData = await extractImageData(images)
