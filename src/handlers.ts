@@ -141,15 +141,12 @@ export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
 
   // Support images under the field name 'images' or 'screenshots'
   const images = extractFiles(ctx, 'images').concat(extractFiles(ctx, 'screenshots'))
-  if (!images.length) {
-    throw { status: 400, message: `Request must include image files` }
-  }
 
   const user = getCurrentUser(ctx)
   const imagesData = await extractImageData(images)
   const { url } = await twitter.tweetStatus(buildTweetParams(user, status, imagesData))
   // tslint:disable-next-line: no-expression-statement
-  saveFeedback({ user, status, domain, imagesData, url })
+  await saveFeedback({ user, status, domain, imagesData, url })
 
   return Object.assign(ctx.response, { status: 201, body: { url } })
 }

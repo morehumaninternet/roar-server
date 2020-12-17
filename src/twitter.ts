@@ -35,9 +35,11 @@ export const tweetStatus = async ({ status, feedback_images, access_token, acces
         throw { status: resp.statusCode, message: resp.statusMessage }
     }
 
-    const url = (data as any).entities?.media?.[0]?.url
-    if (!url) {
-        throw { status: 503, message: 'Response from twitter did not include a URL' }
+    const username = (data as any).user.screen_name
+    const tweetId = (data as any).id_str
+    const url = `https://twitter.com/${username}/statuses/${tweetId}`
+    if (!username || !tweetId) {
+        throw { status: 503, message: 'Response from twitter did not include a valid URL' }
     }
 
     return { url }

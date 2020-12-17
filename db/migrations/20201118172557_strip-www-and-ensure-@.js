@@ -1,5 +1,4 @@
-exports.up = function(knex) {
-
+exports.up = async function (knex) {
   // Delete any websites with domains such as www.xyz.com if we already have xyz.com
   await knex.raw(`
     DELETE
@@ -27,3 +26,5 @@ exports.up = function(knex) {
        AND twitter_handle NOT LIKE '@%'
   `)
 }
+
+exports.down = function () {}
