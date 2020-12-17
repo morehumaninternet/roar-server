@@ -77,16 +77,20 @@ export async function getWebsite(ctx: IRouterContext): Promise<any> {
 // Redirect the user to Twitter for authentication. When complete, Twitter
 // will redirect the user back to the application at
 // /auth/twitter/callback
-export const authTwitter = passport.authenticate('twitter')
+export const authTwitter = () => {
+  return passport.authenticate('twitter')
+}
 
 // Twitter will redirect the user to this URL after approval. Finish the
 // authentication process by attempting to obtain an access token. If
 // access was granted, the user will be logged in. Otherwise,
 // authentication has failed.
-export const authTwitterCallback = passport.authenticate('twitter', {
-  successRedirect: '/v1/auth/twitter/success',
-  failureRedirect: '/v1/auth/twitter/failure'
-})
+export const authTwitterCallback = () => {
+  return passport.authenticate('twitter', {
+    successRedirect: '/v1/auth/twitter/success',
+    failureRedirect: '/v1/auth/twitter/failure'
+  })
+}
 
 export async function authTwitterSuccess(ctx: IRouterContext): Promise<any> {
   const user = getCurrentUser(ctx)
@@ -146,7 +150,7 @@ export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
   const imagesData = await extractImageData(images)
   const { url } = await twitter.tweetStatus(buildTweetParams(user, status, imagesData))
   // tslint:disable-next-line: no-expression-statement
-  saveFeedback({ user, status, domain, imagesData, url })
+  await saveFeedback({ user, status, domain, imagesData, url })
 
   return Object.assign(ctx.response, { status: 201, body: { url } })
 }

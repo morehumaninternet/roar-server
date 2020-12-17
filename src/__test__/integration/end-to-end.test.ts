@@ -4,9 +4,10 @@ import { expect } from 'chai'
 import * as request from 'supertest'
 import * as sinon from 'sinon'
 import axios from 'axios'
-import db from '../db'
-import * as clearbit from '../clearbit'
-import server from '../server'
+import * as knexCleaner from 'knex-cleaner'
+import db from '../../db'
+import * as clearbit from '../../clearbit'
+import { createServer } from '../../server'
 
 
 describe('end-to-end', () => {
@@ -15,14 +16,11 @@ describe('end-to-end', () => {
   let agent: request.SuperTest<request.Test>
   let clearBitGetTwitterHandle: sinon.SinonStub
 
-  before(() => app = server.listen(5005))
-  before(() => {
-    agent = request.agent(app)
-  })
+  before(() => knexCleaner.clean(db as any))
+  before(() => app = createServer().listen())
+  before(() => agent = request.agent(app))
   beforeEach(() => clearBitGetTwitterHandle = sinon.stub(clearbit, 'getTwitterHandle').throws())
-
-  after(() => app && app.close())
-  after(() => db.destroy()) // Leave the database contents alone in case these are useful to inspect after tests have run
+  after(() => app.close())
   afterEach(() => sinon.restore())
 
   describe('/website', () => {
