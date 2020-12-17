@@ -2,7 +2,6 @@ import { identity } from 'lodash'
 import * as Router from 'koa-router'
 import * as send from 'koa-send'
 import { readdirSync } from 'fs'
-import * as users from './users'
 import * as handlers from './handlers'
 
 

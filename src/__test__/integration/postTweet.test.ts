@@ -1,23 +1,21 @@
+// tslint:disable:no-let
+// tslint:disable:no-expression-statement
 import { expect } from 'chai'
-import * as Koa from 'koa'
 import * as http from 'http'
 import * as request from 'supertest'
 import * as sinon from 'sinon'
 import * as Twit from 'twit'
-import { Profile as TwitterProfile } from 'passport-twitter'
 import * as knexCleaner from 'knex-cleaner'
 import db from '../../db'
 import * as users from '../../users'
 import { createServer } from '../../server'
 import { Socket } from 'net'
-import * as Router from 'koa-router'
-import { IRouterContext } from 'koa-router'
 
 
 describe('post a tweet', () => {
   let app: http.Server
   let agent: request.SuperTest<request.Test>
-  let post: sinon.SinonStub
+
   before(() => knexCleaner.clean(db as any))
   before(() => app = createServer(router => (
     router.post('/auth/fake', async ctx => {
@@ -53,10 +51,8 @@ describe('post a tweet', () => {
     const response = await agent
       .post('/v1/feedback')
       .send({ host: 'morehumaninternet.org', status: 'Make the internet great again' })
-      .expect(201, { url: "https://twitter.com/@morehumaninter1/statuses/1111111" })
+      .expect(201, { url: 'https://twitter.com/@morehumaninter1/statuses/1111111' })
 
-    expect(response.body).to.eql({ url: "https://twitter.com/@morehumaninter1/statuses/1111111" })
-
-    // TODO - test that the database has the website and the tweet
+    expect(response.body).to.eql({ url: 'https://twitter.com/@morehumaninter1/statuses/1111111' })
   })
 })

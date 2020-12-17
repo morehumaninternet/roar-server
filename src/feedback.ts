@@ -17,7 +17,7 @@ type SaveFeedbackParam = {
 
 // Only insert feedback_images if they exist.
 // Otherwise, run a dummy select to satisfy SQL syntax constraints after a WITH statement
-const imagesFeedbackSql = (imagesData: ReadonlyArray<FeedbackImageData>,) => {
+const imagesFeedbackSql = (imagesData: ReadonlyArray<FeedbackImageData>) => {
   if (!imagesData.length) return 'SELECT 1'
   return `
     INSERT INTO feedback_images (feedback_id, name, file, file_extension)
