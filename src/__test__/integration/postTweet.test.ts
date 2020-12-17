@@ -36,7 +36,7 @@ describe('post a tweet', () => {
   beforeEach(() => {
     const resp = new http.IncomingMessage(new Socket())
     resp.statusCode = 200
-    post = sinon.stub(Twit.prototype, 'post').returns(
+    sinon.stub(Twit.prototype, 'post').returns(
       new Promise(
         (resolve) => resolve({ resp, data: { id_str: '1111111', user: { screen_name: '@morehumaninter1' } } })
       )
