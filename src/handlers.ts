@@ -84,35 +84,9 @@ export const authTwitter = passport.authenticate('twitter')
 // access was granted, the user will be logged in. Otherwise,
 // authentication has failed.
 export const authTwitterCallback = passport.authenticate('twitter', {
-  successRedirect: '/v1/auth/twitter/success',
-  failureRedirect: '/v1/auth/twitter/failure'
+  successRedirect: '/auth-success',
+  failureRedirect: '/auth-failure'
 })
-
-export async function authTwitterSuccess(ctx: IRouterContext): Promise<any> {
-  const user = getCurrentUser(ctx)
-
-  const event = { type: 'twitter-auth-success', photoUrl: user.photo }
-
-  // tslint:disable: no-expression-statement
-  ctx.type = 'html'
-  ctx.body = `
-    <script>
-      window.parent.postMessage(${JSON.stringify(event)}, '*');
-    </script>
-  `
-  // tslint:enable: no-expression-statement
-}
-
-export async function authTwitterFailure(ctx: IRouterContext): Promise<any> {
-  // tslint:disable: no-expression-statement
-  ctx.type = 'html'
-  ctx.body = `
-    <script>
-      window.parent.postMessage({ type: 'twitter-auth-failure' }, '*');
-    </script>
-  `
-  // tslint:enable: no-expression-statement
-}
 
 export function getMe(ctx: IRouterContext): any {
   const me = getCurrentUser(ctx)

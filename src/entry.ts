@@ -21,5 +21,5 @@ const httpServer = process.env.NODE_ENV === 'prod'
 // tslint:disable:no-expression-statement
 httpServer.listen(port, (error: any) => {
   if (error) throw error
-  console.log(`roar-server listening on ${port}`)
+  console.log(`roar-server listening on ${port} ${new Date()}`)
 })
