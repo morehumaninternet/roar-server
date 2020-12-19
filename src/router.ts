@@ -20,7 +20,7 @@ export function createRouter(withRouter: (router: Router) => Router = identity):
 
   const router = new Router()
     .get(`/health-check`, ({ response }) => Object.assign(response, { status: 200, body: 'OK' }))
-    .redirect('/', '/welcome')
+    .get('/', ctx => send(ctx, '/public/welcome.html'))
     .use('/v1', v1Router.routes(), v1Router.allowedMethods())
 
   // tslint:disable-next-line:no-expression-statement
