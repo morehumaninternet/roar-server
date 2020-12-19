@@ -15,6 +15,16 @@ export function createServer(withRouter?: (router: Router) => Router): Koa {
   server.proxy = true
   server.keys = [process.env.SESSION_KEY || 'keyboard-cat']
 
+  // https://stackoverflow.com/questions/7185074/heroku-nodejs-http-to-https-ssl-forced-redirect
+  if (process.env.NODE_ENV === 'prod') {
+    server.use((ctx, next) => {
+      if (ctx.request.headers['x-forwarded-proto'] !== 'https') {
+        return ctx.redirect(['https://', ctx.request.get('Host'), ctx.request.url].join(''))
+      }
+      return next()
+    })
+  }
+
   server.use(bodyParser({ multipart: true, jsonLimit: '50mb' }))
   server.use(cookieParser.default())
 
