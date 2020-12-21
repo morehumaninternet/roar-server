@@ -85,7 +85,7 @@ export const authTwitter = passport.authenticate('twitter')
 // authentication has failed.
 export const authTwitterCallback = passport.authenticate('twitter', {
   successRedirect: '/auth-success',
-  failureRedirect: '/auth-failure'
+  failureRedirect: '/welcome'
 })
 
 export function getMe(ctx: IRouterContext): any {
