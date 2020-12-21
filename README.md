@@ -13,7 +13,6 @@ Built with ❤️ by the team at <a href="https://morehumaninternet.org">More Hu
 
 - [Setup](/SETUP.md)
 - [Database Schema](#️database-schema)
-- [API Docs](http://roar-server.herokuapp.com/docs.html)
 
 ### Database Schema
 
