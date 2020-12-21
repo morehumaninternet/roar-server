@@ -4,7 +4,7 @@ import * as users from './users'
 
 
 const host = process.env.NODE_ENV === 'prod'
-  ? 'https://roar-server.herokuapp.com'
+  ? 'https://roar.morehumaninternet.org'
   : 'https://localhost:5004'
 
 const callbackURL = `${host}/v1/auth/twitter/callback`
