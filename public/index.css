@@ -1,0 +1,8 @@
+:root {
+  --human-blue: #164176;
+  --human-pink: #fa759e;
+}
+
+.title {
+  color: var(--human-blue);
+}

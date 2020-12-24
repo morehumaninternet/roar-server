@@ -5,8 +5,6 @@ import { readdirSync } from 'fs'
 import { parse } from 'path'
 import * as handlers from './handlers'
 
-
-
 export function createRouter(withRouter: (router: Router) => Router = identity): Router {
 
   const v1Router = withRouter(new Router())
@@ -20,7 +18,8 @@ export function createRouter(withRouter: (router: Router) => Router = identity):
 
   const router = new Router()
     .get(`/health-check`, ({ response }) => Object.assign(response, { status: 200, body: 'OK' }))
-    .get('/', ctx => send(ctx, '/public/welcome.html'))
+    .get('/', ctx => send(ctx, '/public/index.html'))
+    .get('/welcome', ctx => send(ctx, '/public/welcome.html'))
     .use('/v1', v1Router.routes(), v1Router.allowedMethods())
 
   // tslint:disable-next-line:no-expression-statement
