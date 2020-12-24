@@ -6,3 +6,7 @@
 .title {
   color: var(--human-blue);
 }
+
+.steps {
+  display: flex;
+}
