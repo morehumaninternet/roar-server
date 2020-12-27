@@ -5,8 +5,30 @@
 
 .title {
   color: var(--human-blue);
+  text-align: center;
 }
 
 .steps {
   display: flex;
+  justify-content: space-between;
+  padding: 5% 10%;
+}
+
+.step {
+  padding: 0 3%;
+}
+
+@media (max-width: 700px) {
+  .title {
+    padding: 0 15%;
+  }
+  .steps {
+    display: flex;
+    flex-direction: column;
+    padding: 3% 15%;
+  }
+
+  .step {
+    padding: 5% 25%;
+  }
 }
