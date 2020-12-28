@@ -1,8 +1,128 @@
 :root {
   --human-blue: #164176;
   --human-pink: #fa759e;
+  --human-pink-light: #fa759ea6;
 }
 
-.title {
+body {
+  font-family: "Roboto", sans-serif;
+}
+
+.introduction-section {
+  height: 100vh;
+  background: linear-gradient(var(--human-pink-light), white);
+  display: grid;
+  grid-template-rows: max-content 0.5fr max-content 2fr;
+  justify-items: center;
   color: var(--human-blue);
+}
+
+.header {
+  display: flex;
+  grid-row: 1;
+  padding-top: 5%;
+}
+
+.logo {
+  height: 3rem;
+  align-self: center;
+}
+
+.hero-container {
+  grid-row: 3;
+  display: grid;
+  grid-template-rows: max-content 30% max-content;
+}
+
+.hero-text {
+  padding-left: 5vw;
+  grid-row: 1;
+}
+
+.hero-image {
+  max-width: 90vw;
+  grid-row: 3;
+  padding-left: 5vw;
+  padding-right: 5vw;
+  cursor: pointer;
+}
+
+.btn {
+  padding: 3% 3%;
+  border: none;
+  cursor: pointer;
+}
+
+.btn__download {
+  display: none; /* Hide the download button on mobile */
+}
+
+.btn__watch {
+  color: var(--human-blue);
+}
+
+.modal {
+  background-color: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  /* display: grid; */
+  /* place-items: center; */
+}
+
+.modal--hidden {
+  display: none;
+}
+
+.modal__content {
+  position: relative;
+  height: 0;
+  padding-top: 56%;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.modal__content iframe {
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 50%;
+  height: 50%;
+}
+
+@media screen and (min-width: 700px) {
+  .introduction-section {
+    justify-items: initial;
+    grid-template-rows: max-content 1fr max-content 2fr;
+  }
+
+  .header {
+    padding-top: initial;
+  }
+
+  .hero-container {
+    grid-template-rows: initial;
+    grid-template-columns: 1fr max-content 1fr max-content 1fr;
+  }
+
+  .hero-text {
+    grid-column: 2;
+    flex-direction: column;
+    padding-left: initial;
+    align-self: center;
+    grid-row: initial;
+  }
+
+  .hero-image {
+    grid-row: initial;
+    grid-column: 4;
+  }
+
+  .btn__download {
+    display: initial;
+    background-color: var(--human-blue);
+    color: white;
+    text-decoration: none;
+  }
 }
