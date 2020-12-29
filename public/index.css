@@ -12,8 +12,7 @@ body {
   height: 100vh;
   background: linear-gradient(var(--human-pink-light), white);
   display: grid;
-  grid-template-rows: max-content 0.5fr max-content 2fr;
-  justify-items: center;
+  grid-template-rows: auto 1fr auto 2fr;
   color: var(--human-blue);
 }
 
@@ -21,22 +20,33 @@ body {
   display: flex;
   grid-row: 1;
   padding-top: 10px;
+  padding-left: 10px;
 }
 
 .hero-container {
   grid-row: 3;
   display: grid;
-  grid-template-rows: max-content 30% max-content;
+  grid-template-columns: 3fr minmax(290px, auto) 1fr auto 3fr;
+  align-items: center;
 }
 
 .hero-content {
-  padding-left: 5vw;
-  grid-row: 1;
+  grid-column: 2;
+  flex-direction: column;
+  align-self: center;
+}
+
+.hero__header {
+  font-size: 3rem;
+}
+
+.hero__text {
+  font-size: 1.5rem;
 }
 
 .hero__gif {
+  grid-column: 4;
   max-width: 90vw;
-  grid-row: 3;
   padding: 0 5vw;
   cursor: pointer;
 }
@@ -48,7 +58,9 @@ body {
 }
 
 .btn--download {
-  display: none; /* Hide the download button on mobile */
+  background-color: var(--human-blue);
+  color: white;
+  text-decoration: none;
 }
 
 .btn--watch {
@@ -91,46 +103,71 @@ body {
   height: 100%;
 }
 
-@media screen and (min-width: 700px) {
+.steps-title {
+  color: var(--human-blue);
+  text-align: center;
+}
+
+.steps {
+  display: flex;
+  padding: 5% 10%;
+}
+
+.step {
+  padding: 0 3%;
+}
+
+@media (max-width: 700px) {
   .introduction-section {
-    justify-items: initial;
-    grid-template-rows: auto 1fr auto 2fr;
+    grid-template-rows: max-content 0.5fr max-content 2fr;
+    justify-items: center;
   }
 
   .logo {
-    padding-left: 10px;
+    padding-left: initial;
   }
 
   .hero-container {
-    grid-template-rows: initial;
-    grid-template-columns: 3fr minmax(290px, auto) 1fr auto 3fr;
-    align-items: center;
+    align-items: initial;
+    grid-template-rows: max-content 30% max-content;
+    grid-template-columns: initial;
   }
 
   .hero-content {
-    grid-column: 2;
-    flex-direction: column;
-    align-self: center;
-    grid-row: initial;
+    grid-column: initial;
+    grid-row: 1;
+    padding-left: 5vw;
+    align-self: initial;
   }
 
   .hero__header {
-    font-size: 3rem;
+    font-size: initial;
   }
 
   .hero__text {
-    font-size: 1.5rem;
+    font-size: initial;
   }
 
   .hero__gif {
-    grid-row: initial;
-    grid-column: 4;
+    grid-column: initial;
+    grid-row: 3;
   }
 
   .btn--download {
-    display: initial;
-    background-color: var(--human-blue);
-    color: white;
-    text-decoration: none;
+    display: none; /* Hide the download button on mobile */
+  }
+
+  .steps-title {
+    padding: 0 15%;
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    padding: 3% 15%;
+  }
+
+  .step {
+    padding: 5% 25%;
   }
 }
