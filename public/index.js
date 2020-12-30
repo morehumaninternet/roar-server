@@ -30,7 +30,7 @@ document.onkeydown = (event) => {
 /*
   Toggle FAQ item content when clicking on FAQ headline.
 */
-const acc = document.getElementsByClassName("accordion");
+const acc = document.getElementsByClassName("acc-header");
 
 Array.prototype.forEach.call(acc, (el) => {
   el.addEventListener("click", () => {
