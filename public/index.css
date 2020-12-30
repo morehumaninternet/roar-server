@@ -117,6 +117,38 @@ body {
   padding: 0 3%;
 }
 
+.faq-container {
+  display: flex;
+  flex-direction: column;
+  padding: 0 25%;
+}
+
+.faq-item {
+  padding: 0 3rem;
+}
+
+/* accordion styles */
+.accordion {
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  margin: 0.5rem 0;
+  transition: 0.4s;
+}
+
+/* .active,
+.accordion:hover {
+  background-color: #ccc;
+} */
+
+.panel {
+  padding: 0 0 0 1.5rem;
+  background-color: white;
+  display: none;
+  overflow: hidden;
+}
+
+/* media query  */
 @media (max-width: 700px) {
   .introduction-section {
     grid-template-rows: max-content 0.5fr max-content 2fr;
