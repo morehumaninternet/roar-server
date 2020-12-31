@@ -4,6 +4,10 @@
   --human-pink-light: #fa759ea6;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: "Roboto", sans-serif;
 }
@@ -120,13 +124,8 @@ body {
 .accordion {
   display: flex;
   flex-direction: column;
-  min-width: 350px;
+  min-width: 320px;
   padding: 0 10%;
-}
-
-.acc-item {
-  flex: 0 0 auto;
-  /* padding: 0 3rem; */
 }
 
 /* accordion styles */
@@ -136,6 +135,10 @@ body {
   width: 100%;
   text-align: left;
   margin: 0.5rem 0;
+}
+
+.acc-item {
+  padding: 0.5rem 0;
 }
 
 .panel {
