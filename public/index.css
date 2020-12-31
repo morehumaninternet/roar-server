@@ -120,12 +120,13 @@ body {
 .accordion {
   display: flex;
   flex-direction: column;
-  /* padding: 0 25%; */
+  min-width: 350px;
+  padding: 0 10%;
 }
 
 .acc-item {
   flex: 0 0 auto;
-  padding: 0 3rem;
+  /* padding: 0 3rem; */
 }
 
 /* accordion styles */
