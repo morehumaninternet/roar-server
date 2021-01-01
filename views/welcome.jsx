@@ -24,10 +24,6 @@ module.exports = function Welcome() {
           <br />
           Protected by Twitter's <a href="https://twitter.com/tos">TOS</a> and <a href="https://twitter.com/privacy">Privacy</a>.
         </p>
-        <p className="built">
-          Built with ❤️ by the team at <br />
-          <a target="_blank" href="https://morehumaninternet.org">morehumaninternet.org</a>
-        </p>
       </div>
     </Layout>
   )

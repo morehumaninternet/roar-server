@@ -16,3 +16,8 @@ header {
   position: absolute;
   top: 0;
 }
+
+.logo {
+  padding-top: 10px;
+  padding-left: 10px;
+}
