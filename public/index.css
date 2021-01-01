@@ -206,17 +206,48 @@ body {
 /* footer styles  */
 
 .mhi-footer {
-  display: flex;
+  /* display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; */
   font-size: 0.77777em;
   padding-left: 25px;
   padding-right: 25px;
-  background-color: #f9f9f9;
+  /* background-color: #f9f9f9; */
   padding-top: 2.5rem;
+}
+.footer-header {
+  position: relative;
+  width: 180px;
+  /* justify-content: center; */
+  /* padding: 0.5rem 0; */
+  left: 50%;
+  transform: translate(-50%);
+}
+.mhi-logo {
+  position: relative;
+  /* padding: 0.5rem 0; */
+  width: 135px;
+  left: 50%;
+  transform: translate(-50%);
 }
 
 .footer-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background-color: var(--human-blue);
+  width: 100%;
+  margin-top: 3rem;
+  height: 3.5rem;
+  padding: 0 1rem;
+}
+
+.footer-links {
+  min-width: 160px;
+}
+.footer-banner p {
+  /* display: inline; */
+  /* float: right; */
+  color: white;
 }
