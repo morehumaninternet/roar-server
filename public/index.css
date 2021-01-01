@@ -206,33 +206,14 @@ body {
 /* footer styles  */
 
 .mhi-footer {
-  /* display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between; */
-  font-size: 0.77777em;
-  padding-left: 25px;
-  padding-right: 25px;
-  /* background-color: #f9f9f9; */
+  font-size: 0.8em;
   padding-top: 2.5rem;
 }
 
-.footer-header {
-  position: relative;
-  width: 180px;
-  left: 50%;
-  transform: translate(-50%);
-}
-
-.footer-header > h4 > svg {
-  transform: translate(0, 25%);
-}
 .mhi-logo {
-  position: relative;
-  /* padding: 0.5rem 0; */
-  width: 135px;
-  left: 50%;
-  transform: translate(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .footer-banner {
@@ -250,9 +231,7 @@ body {
 .footer-links {
   min-width: 160px;
 }
+
 .footer-banner p {
-  /* display: inline; */
-  /* float: right; */
-  /* min-width: 333px; */
   color: white;
 }
