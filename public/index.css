@@ -217,26 +217,30 @@ body {
   color: var(--human-blue);
 }
 
-/* .mhi-logo > h4 > svg {
-  transform: translate(0, 25%);
-} */
+.mhi-logo > h4 > svg {
+  height: 17px;
+  position: relative;
+  padding: 1px;
+  top: 5px;
+}
 
-svg.top-right {
+.top-right {
   fill: var(--human-blue);
 }
 
 .more {
   fill: var(--human-blue);
 }
+
 .internet {
   fill: var(--human-blue);
 }
 
 .bottom-left {
-  fill: bar(--human-pink);
+  fill: var(--human-pink);
 }
 .human {
-  fill: bar(--human-pink);
+  fill: var(--human-pink);
 }
 
 .footer-banner {
