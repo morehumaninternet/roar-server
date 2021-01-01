@@ -214,6 +214,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: var(--human-blue);
 }
 
 .footer-banner {
