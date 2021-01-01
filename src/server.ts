@@ -4,6 +4,8 @@ import * as Router from 'koa-router'
 import bodyParser = require('koa-body')
 import * as session from 'koa-session'
 const cookieParser = require('koa-cookie')
+const react = require('koa-react-view')
+const register = require('babel-register')
 import * as errorHandling from './errorHandling'
 import sessionStore from './sessionStore'
 import passport from './passport'
@@ -24,6 +26,13 @@ export function createServer(withRouter?: (router: Router) => Router): Koa {
       return next()
     })
   }
+
+  react(server, { views: process.cwd() + '/views' })
+
+  register({
+    presets: [ 'es2015', 'react' ],
+    extensions: [ '.jsx' ],
+  })
 
   server.use(bodyParser({ multipart: true, jsonLimit: '50mb' }))
   server.use(cookieParser.default())

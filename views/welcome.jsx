@@ -1,0 +1,41 @@
+const React = require('react')
+const Layout = require('./layout')
+
+module.exports = function Welcome() {
+  return (
+    <Layout
+      title="Welcome to Roar!"
+      stylesheets={<link type="text/css" rel="stylesheet" href="welcome.css" />}
+    >
+      <div className="spacer" />
+        <div className="wrapper">
+          <header>
+            <svg width="100" height="100" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11.6364 2.9406C11.6364 7.74314 9.03147 11.6364 5.81818 11.6364C2.60489 11.6364 0 7.74314 0 2.9406C0 -1.86193 2.42468 0.663665 5.63797 0.663665C8.85126 0.663665 11.6364 -1.86193 11.6364 2.9406Z" fill="#164176"/>
+              <path fillRule="evenodd" clipRule="evenodd" d="M1.49316 8.76258C1.71286 7.10936 3.57295 5.81836 5.83509 5.81836C8.09722 5.81836 9.95732 7.10936 10.177 8.76258C9.11151 10.5262 7.56106 11.6366 5.83509 11.6366C4.10911 11.6366 2.55867 10.5262 1.49316 8.76258Z" fill="#FA759E"/>
+            </svg>
+          </header>
+          <h1>The last step is a big deal</h1>
+          <h2>Great, you’ve installed Roar! Now, log in with Twitter to let the world know about problems you encounter online.</h2>
+          <div className="sign-in-btn__container">
+            <a className="sign-in-btn" href="/v1/auth/twitter">
+              <svg className="twitter-logo" viewBox="0 0 400 400">
+                <path d="M153.62 301.59c94.34 0 145.94-78.16 145.94-145.94 0-2.22 0-4.43-.15-6.63A104.36 104.36 0 00325 122.47a102.38 102.38 0 01-29.46 8.07 51.47 51.47 0 0022.55-28.37 102.79 102.79 0 01-32.57 12.45 51.34 51.34 0 00-87.41 46.78A145.62 145.62 0 0192.4 107.81a51.33 51.33 0 0015.88 68.47A50.91 50.91 0 0185 169.86v.65a51.31 51.31 0 0041.15 50.28 51.21 51.21 0 01-23.16.88 51.35 51.35 0 0047.92 35.62 102.92 102.92 0 01-63.7 22 104.41 104.41 0 01-12.21-.74 145.21 145.21 0 0078.62 23" />
+              </svg>
+              Log in with Twitter
+            </a>
+          </div>
+          <p className="terms">
+            By joining, I agree to Roar's <a href="https://roar.morehumaninternet.org/tos">TOS</a> and <a href="https://roar.morehumaninternet.org/privacy">Privacy</a>.
+            <br />
+            Protected by Twitter's <a href="https://twitter.com/tos">TOS</a> and <a href="https://twitter.com/privacy">Privacy</a>.
+          </p>
+          <p className="built">
+            Built with ❤️ by the team at <br />
+            <a target="_blank" href="https://morehumaninternet.org">morehumaninternet.org</a>
+          </p>
+        </div>
+        <div className="spacer" />
+    </Layout>
+  )
+}
