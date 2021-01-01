@@ -217,6 +217,10 @@ body {
   color: var(--human-blue);
 }
 
+.mhi-logo > h4 > svg {
+  transform: translate(0, 25%);
+}
+
 .footer-banner {
   display: flex;
   align-items: center;
