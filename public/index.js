@@ -35,7 +35,7 @@ const acc = document.getElementsByClassName("acc-header");
 Array.prototype.forEach.call(acc, (el) => {
   el.addEventListener("click", () => {
     el.classList.toggle("active");
-    let panel = el.nextElementSibling; 
+    let panel = el.nextElementSibling;
     if (panel.style.display === 'block') {
       panel.style.display = "none";
     } else {

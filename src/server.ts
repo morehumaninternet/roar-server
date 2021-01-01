@@ -30,8 +30,8 @@ export function createServer(withRouter?: (router: Router) => Router): Koa {
   react(server, { views: process.cwd() + '/views' })
 
   register({
-    presets: [ 'es2015', 'react' ],
-    extensions: [ '.jsx' ],
+    presets: ['es2015', 'react'],
+    extensions: ['.jsx'],
   })
 
   server.use(bodyParser({ multipart: true, jsonLimit: '50mb' }))
