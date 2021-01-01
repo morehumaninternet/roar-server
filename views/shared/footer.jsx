@@ -32,7 +32,7 @@ function BuiltWith() {
 
 function FooterLink(props) {
   return (
-    <a className="footer-link" href={props.href} aria-label={props.ariaLabel}>
+    <a className="footer-link" href={props.href} title={props.ariaLabel} aria-label={props.ariaLabel}>
       {props.icon}
     </a>
   )

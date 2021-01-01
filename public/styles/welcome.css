@@ -6,7 +6,6 @@ body {
 }
 
 main {
-
   flex-grow: 1;
   background: linear-gradient(var(--human-pink-light), white);
 
