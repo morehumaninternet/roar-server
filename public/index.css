@@ -216,13 +216,16 @@ body {
   /* background-color: #f9f9f9; */
   padding-top: 2.5rem;
 }
+
 .footer-header {
   position: relative;
   width: 180px;
-  /* justify-content: center; */
-  /* padding: 0.5rem 0; */
   left: 50%;
   transform: translate(-50%);
+}
+
+.footer-header > h4 > svg {
+  transform: translate(0, 25%);
 }
 .mhi-logo {
   position: relative;
@@ -236,9 +239,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   background-color: var(--human-blue);
   width: 100%;
-  margin-top: 3rem;
+  margin-top: 5rem;
   height: 3.5rem;
   padding: 0 1rem;
 }
@@ -249,5 +253,6 @@ body {
 .footer-banner p {
   /* display: inline; */
   /* float: right; */
+  /* min-width: 333px; */
   color: white;
 }
