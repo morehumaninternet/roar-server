@@ -30,16 +30,15 @@ document.onkeydown = (event) => {
 /*
   Toggle FAQ item content when clicking on FAQ headline.
 */
-const acc = document.getElementsByClassName("acc-header");
+const acc = document.getElementsByClassName("acc-item")
 
-Array.prototype.forEach.call(acc, (el) => {
+Array.prototype.forEach.call(acc, el => {
   el.addEventListener("click", () => {
-    el.classList.toggle("active");
-    let panel = el.nextElementSibling;
-    if (panel.style.display === 'block') {
-      panel.style.display = "none";
-    } else {
-      panel.style.display = "block";
-    }
+    Array.prototype.forEach.call(acc, otherEl => {
+      if (el !== otherEl) {
+        otherEl.classList.remove("active")
+      }
+    })
+    el.classList.toggle("active")
   })
 })

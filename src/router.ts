@@ -5,6 +5,12 @@ import { readdirSync } from 'fs'
 import { parse, ParsedPath } from 'path'
 import * as handlers from './handlers'
 
+declare module 'koa-router' {
+  export interface IRouterContext {
+    render(view: string, data?: any): any
+  }
+}
+
 // Sychronously yield all files in the given directory, searching recursively
 function * files(dir: string): IterableIterator<ParsedPath & { full: string }> {
   for (const name of readdirSync(process.cwd() + dir)) {

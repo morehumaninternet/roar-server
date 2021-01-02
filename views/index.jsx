@@ -1,6 +1,5 @@
 const React = require('react')
 const Layout = require('./shared/layout')
-const Header = require('./shared/header')
 
 
 function IntroductionSection() {
@@ -10,7 +9,7 @@ function IntroductionSection() {
         <div className="hero-content">
           <h1 className="hero__header">Powered by you</h1>
           <p className="hero__text">See something broken online?<br />Tell the world and get help with Roar from More Human Internet.</p>
-          <a className="btn btn--download" target="_blank" rel="noopener noreferrer" href="https://morehumaninternet.org">Free Download</a>
+          <a className="btn btn--download" rel="noopener noreferrer" href="https://morehumaninternet.org">Free Download</a>
           <button className="btn btn--watch">Watch Video</button>
         </div>
         <img className="hero__gif" src="demo_video.gif" />
@@ -134,10 +133,7 @@ function Accordion() {
 
 module.exports = function Index() {
   return (
-    <Layout
-      stylesheets="index.css"
-      scripts="index.js"
-    >
+    <Layout stylesheets="index.css" scripts="index.js">
       <IntroductionSection />
       <Modal />
       <StepsSection />

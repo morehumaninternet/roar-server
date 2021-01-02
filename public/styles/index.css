@@ -136,6 +136,10 @@
   overflow: hidden;
 }
 
+.acc-item.active .panel {
+  display: block;
+}
+
 /* media query  */
 @media (max-width: 700px) {
   .introduction-section {
