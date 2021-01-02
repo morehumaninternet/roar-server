@@ -1,6 +1,7 @@
 /*
   Load a jsdom.DOMWindow
 */
+// tslint:disable:no-expression-statement
 import * as request from 'supertest'
 import { JSDOM, DOMWindow, ResourceLoader } from 'jsdom'
 
@@ -35,7 +36,7 @@ export async function getWindow(agent: request.SuperTest<request.Test>, path: st
     resources: Object.assign(new ResourceLoader(), {
       // Fetch resources from the given agent for urls starting with our fake server url
       // Return blank files for all other resources
-      fetch(url: string) {
+      fetch(url: string): Promise<Buffer> {
         if (url.startsWith(fakeUrl)) {
           return agent.get(url.replace(fakeUrl, '')).then(response => Buffer.from(response.text))
         }

@@ -13,10 +13,16 @@ import * as knexCleaner from 'knex-cleaner'
 import db from '../../db'
 import { createServer } from '../../server'
 import { getWindow } from './getWindow'
+import { DOMWindow } from 'jsdom'
+
+type Mocks = {
+  agent: request.SuperTest<request.Test>
+  getWindow(path: string): Promise<DOMWindow>
+}
 
 let mocked = false
 
-export function createMocks(withRouter?: (router: Router) => Router) {
+export function createMocks(withRouter?: (router: Router) => Router): Mocks {
   const app = createServer(withRouter)
   let server: http.Server
   let agent: request.SuperTest<request.Test>
@@ -33,7 +39,9 @@ export function createMocks(withRouter?: (router: Router) => Router) {
   after(() => mocked = false)
 
   return {
-    get agent() { return agent },
+    get agent(): request.SuperTest<request.Test> {
+      return agent
+    },
     getWindow: (path: string) => getWindow(agent, path)
   }
 }

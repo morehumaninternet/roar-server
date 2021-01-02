@@ -41,10 +41,9 @@ export function createRouter(withRouter: (router: Router) => Router = identity):
     .get('/welcome', ctx => ctx.render('welcome'))
     .use('/v1', v1Router.routes(), v1Router.allowedMethods())
 
-  // tslint:disable-next-line:no-expression-statement
   for (const file of files('/public')) {
     const route = file.ext === '.html' ? file.name : file.base
-    router.get('/' + route, ctx => send(ctx, file.full))
+    router.get('/' + route, ctx => send(ctx, file.full)) // tslint:disable-line:no-expression-statement
   }
 
   return router
