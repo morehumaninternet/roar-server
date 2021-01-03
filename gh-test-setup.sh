@@ -7,7 +7,7 @@ if [ -z "$GITHUB_REF" ]; then
 fi
 
 cat << EOF > .env.test
-DB_HOST=postgres
+DB_HOST=0.0.0.0
 DB_PASS=password
 DB_USER=roar
 DB_NAME=roar_test
