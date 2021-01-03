@@ -1,6 +1,7 @@
 // tslint:disable:no-expression-statement
 import * as Koa from 'koa'
 import * as Router from 'koa-router'
+import * as path from 'path'
 import bodyParser = require('koa-body')
 import * as session from 'koa-session'
 const cookieParser = require('koa-cookie')
@@ -33,7 +34,7 @@ export function createServer(withRouter?: (router: Router) => Router): Koa {
     })
   }
 
-  react(server, { views: process.cwd() + '/views' })
+  react(server, { views: path.join(__dirname, '..', 'views') })
 
   server.use(bodyParser({ multipart: true, jsonLimit: '50mb' }))
   server.use(cookieParser.default())

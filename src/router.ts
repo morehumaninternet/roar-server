@@ -1,5 +1,6 @@
 import { identity } from 'lodash'
 import * as Router from 'koa-router'
+import * as path from 'path'
 import * as send from 'koa-send'
 import { readdirSync } from 'fs'
 import { parse, ParsedPath } from 'path'
@@ -13,7 +14,7 @@ declare module 'koa-router' {
 
 // Sychronously yield all files in the given directory, searching recursively
 function * files(dir: string): IterableIterator<ParsedPath & { full: string }> {
-  for (const name of readdirSync(process.cwd() + dir)) {
+  for (const name of readdirSync(path.join(__dirname, '..', dir))) {
     const parsed = parse(name)
     // Yield all files in subdirectories
     if (!parsed.ext) {
