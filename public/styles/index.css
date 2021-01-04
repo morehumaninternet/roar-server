@@ -1,17 +1,3 @@
-:root {
-  --human-blue: #164176;
-  --human-pink: #fa759e;
-  --human-pink-light: #fa759ea6;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  font-family: "Roboto", sans-serif;
-}
-
 .introduction-section {
   height: 100vh;
   background: linear-gradient(var(--human-pink-light), white);
@@ -23,8 +9,6 @@ body {
 .logo {
   display: flex;
   grid-row: 1;
-  padding-top: 10px;
-  padding-left: 10px;
 }
 
 .hero-container {
@@ -121,6 +105,11 @@ body {
   padding: 0 3%;
 }
 
+.step-explanation > svg {
+  height: 60px;
+  width: 60px;
+}
+
 .accordion {
   display: flex;
   flex-direction: column;
@@ -145,6 +134,10 @@ body {
   padding: 0 0 0 1.5rem;
   display: none;
   overflow: hidden;
+}
+
+.acc-item.active .panel {
+  display: block;
 }
 
 /* media query  */
@@ -200,95 +193,5 @@ body {
 
   .step {
     padding: 5% 25%;
-  }
-}
-
-/* footer styles  */
-
-.mhi-footer {
-  font-size: 0.8em;
-  padding-top: 2.5rem;
-}
-
-.mhi-logo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: var(--human-blue);
-}
-
-.mhi-logo > h4 > svg {
-  height: 17px;
-  position: relative;
-  padding: 1px;
-  top: 5px;
-}
-
-.top-right {
-  fill: var(--human-blue);
-}
-
-.more {
-  fill: var(--human-blue);
-}
-
-.internet {
-  fill: var(--human-blue);
-}
-
-.bottom-left {
-  fill: var(--human-pink);
-}
-.human {
-  fill: var(--human-pink);
-}
-
-.footer-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  background-color: var(--human-blue);
-  width: 100%;
-  margin-top: 5rem;
-  padding: 0 1rem;
-}
-
-.footer-links__container {
-  display: flex;
-  justify-content: center;
-}
-
-.footer-links {
-  height: 3.5rem;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.footer-link:not(:first-child) {
-  margin-left: 20px;
-}
-
-.footer-link > svg {
-  fill: #e9e9e9;
-}
-
-.footer-link:hover > svg {
-  fill: white;
-}
-
-.copyright {
-  color: white;
-  text-align: center;
-}
-
-@media (max-width: 700px) {
-  .footer-banner {
-    padding: 0.5rem 1rem;
-  }
-  .footer-links__container,
-  .copyright {
-    width: 100%;
   }
 }

@@ -1,13 +1,22 @@
 // tslint:disable:no-expression-statement
 import * as Koa from 'koa'
 import * as Router from 'koa-router'
+import * as path from 'path'
 import bodyParser = require('koa-body')
 import * as session from 'koa-session'
 const cookieParser = require('koa-cookie')
+const react = require('koa-react-view')
+const register = require('babel-register')
 import * as errorHandling from './errorHandling'
 import sessionStore from './sessionStore'
 import passport from './passport'
 import { createRouter } from './router'
+
+
+register({
+  presets: ['es2015', 'react'],
+  extensions: ['.jsx'],
+})
 
 export function createServer(withRouter?: (router: Router) => Router): Koa {
   const server = errorHandling.configureServer(new Koa())
@@ -24,6 +33,8 @@ export function createServer(withRouter?: (router: Router) => Router): Koa {
       return next()
     })
   }
+
+  react(server, { views: path.join(__dirname, '..', 'views') })
 
   server.use(bodyParser({ multipart: true, jsonLimit: '50mb' }))
   server.use(cookieParser.default())

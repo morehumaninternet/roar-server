@@ -14,8 +14,8 @@ const server = createServer()
 const httpServer = process.env.NODE_ENV === 'prod'
   ? http.createServer(server.callback())
   : https.createServer({
-    key: fs.readFileSync(path.resolve(process.cwd(), 'certs/localhost.key'), 'utf8').toString(),
-    cert: fs.readFileSync(path.resolve(process.cwd(), 'certs/localhost.crt'), 'utf8').toString(),
+    key: fs.readFileSync(path.join(__dirname, '..', 'certs/localhost.key'), 'utf8').toString(),
+    cert: fs.readFileSync(path.join(__dirname, '..', 'certs/localhost.crt'), 'utf8').toString(),
   }, server.callback())
 
 // tslint:disable:no-expression-statement

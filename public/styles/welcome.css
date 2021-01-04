@@ -1,0 +1,69 @@
+body {
+  text-align: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex-grow: 1;
+  background: linear-gradient(var(--human-pink-light), white);
+
+  display: flex;
+  place-items: center;
+}
+
+/* https://www.joshwcomeau.com/css/full-bleed/ */
+.wrapper {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns:
+    1fr
+    min(65ch, 100%)
+    1fr;
+}
+.wrapper > * {
+  grid-column: 2;
+}
+
+.full-bleed {
+  width: 100%;
+  grid-column: 1 / 4;
+}
+
+.sign-in-btn__container {
+  display: flex;
+  justify-content: center;
+}
+
+.sign-in-btn {
+  flex-grow: 0;
+  border-radius: 25px;
+  background-color: #1da1f2;
+  color: white;
+  padding: 6px 16px 6px 6px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+svg.twitter-logo {
+  padding: 3px;
+  height: 25px;
+}
+svg.twitter-logo > path {
+  fill: white;
+}
+
+.terms, .terms > a {
+  color: #757575;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.built, .built > a {
+  color: #FA759E;
+}

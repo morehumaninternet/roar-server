@@ -12,14 +12,9 @@ Built with ❤️ by the team at <a href="https://morehumaninternet.org">More Hu
 ## Table of Contents
 
 - [Setup](/SETUP.md)
-- [Database Schema](#️database-schema)
 
-### Database Schema
+## Adding Pages/Styles
 
-`id`, `created_ts`, and `updated_ts` are present for each model
+All files placed in the [/public](/public) directory or any of its subdirectories are served. By convention, styles go in the styles directory and scripts go in the scripts directory.
 
-`website`
-  - `domain`
-  - `twitter_handle`
-  - `last_checked_website_html_at`
-  - `last_checked_clearbit_at`
+We're rendering our views using server-side React/JSX. Pages may be placed in the [/views](/views) directory, making them renderable by the [router](src/router.ts).
