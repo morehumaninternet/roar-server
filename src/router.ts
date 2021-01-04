@@ -13,12 +13,12 @@ declare module 'koa-router' {
 }
 
 // Sychronously yield all files in the given directory, searching recursively
-function * files(dir: string): IterableIterator<ParsedPath & { full: string }> {
+function* files(dir: string): IterableIterator<ParsedPath & { full: string }> {
   for (const name of readdirSync(path.join(__dirname, '..', dir))) {
     const parsed = parse(name)
     // Yield all files in subdirectories
     if (!parsed.ext) {
-      yield * files(`${dir}/${name}`)
+      yield* files(`${dir}/${name}`)
     } else {
       yield { ...parsed, full: `${dir}/${parsed.base}` }
     }
@@ -34,6 +34,7 @@ export function createRouter(withRouter: (router: Router) => Router = identity):
     .get('/me', handlers.getMe)
     .post('/feedback', handlers.postFeedback)
     .post('/logout', handlers.logout)
+    .post('/subscribe', handlers.subscribe)
     .get('/fail', () => { throw new Error('Failure!') })
 
   const router = new Router()

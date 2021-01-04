@@ -140,6 +140,77 @@
   display: block;
 }
 
+.get-updates {
+  display: grid;
+  grid-template-columns:
+    1fr minmax(max-content, 300px) minmax(max-content, 300px)
+    1fr;
+  gap: 20px;
+  align-items: center;
+  margin: 5rem 0;
+}
+
+.slack {
+  height: 44px;
+  color: var(--human-blue);
+  font-weight: bold;
+  grid-column: 2;
+  align-self: flex-start;
+
+  border: 1px solid var(--human-blue);
+  border-radius: 5px;
+
+  display: flex;
+  gap: 0.2rem;
+  justify-content: center;
+  align-items: center;
+
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.slack__text {
+  margin: 0;
+}
+
+.newsletter {
+  grid-column: 3;
+}
+
+.newsletter__form {
+  height: 44px;
+  display: flex;
+  place-items: center;
+}
+
+.newsletter__email {
+  height: 100%;
+  flex-grow: 1;
+  color: white;
+  background-color: var(--human-blue);
+  border: none;
+  padding: 0.8rem 0.8rem;
+  border-radius: 5px 0 0 5px;
+}
+
+.newsletter__submit {
+  height: 100%;
+  background-color: var(--human-pink);
+  border: none;
+  padding: 0.8rem 0.8rem;
+  color: white;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+}
+
+.newsletter__promise {
+  font-size: 0.6rem;
+}
+
+.hide {
+  display: none;
+}
+
 /* media query  */
 @media (max-width: 700px) {
   .introduction-section {
@@ -193,5 +264,24 @@
 
   .step {
     padding: 5% 25%;
+  }
+
+  .get-updates {
+    display: grid;
+    grid-template-columns: initial;
+    grid-template-rows: max-content max-content;
+    align-items: center;
+    justify-content: center;
+    margin: 5rem 0;
+  }
+
+  .slack {
+    height: initial;
+    grid-column: initial;
+  }
+
+  .newsletter {
+    height: initial;
+    grid-column: initial;
   }
 }

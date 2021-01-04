@@ -1,6 +1,7 @@
 const React = require('react')
 const Layout = require('./shared/layout')
 const stepIcons = require('./components/step-icons')
+const { SlackIcon } = require('./components/slack-icon')
 
 
 function IntroductionSection() {
@@ -116,6 +117,25 @@ function Accordion() {
   )
 }
 
+function GetUpdatesSection() {
+  return (
+    <section className="get-updates">
+      <a className="slack" target="_blank" rel="noopener noreferrer" href="https://join.slack.com/t/morehumaninternet/shared_invite/zt-kkbdraz8-XT5~cViVQTJlzaklWgj7Dg">
+          {SlackIcon}
+          <p className="slack__text">Join our Slack channel</p>
+      </a>
+      <div className="newsletter">
+        <form className="newsletter__form">
+          <input className="newsletter__email" type="email" placeholder="email" required/>
+          <button className="newsletter__submit" type="submit">Get updates</button>
+        </form>
+        <p className="newsletter__promise">* We hate spam and won’t ever share your email with anyone else</p>
+        <p className="newsletter__result hide"></p>
+      </div>
+    </section>
+  )
+}
+
 module.exports = function Index() {
   return (
     <Layout stylesheets="index.css" scripts="index.js">
@@ -123,6 +143,7 @@ module.exports = function Index() {
       <Modal />
       <StepsSection />
       <Accordion />
+      <GetUpdatesSection />
     </Layout>
   )
 }

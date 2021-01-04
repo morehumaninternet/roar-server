@@ -1,6 +1,7 @@
 // tslint:disable:no-expression-statement no-let
 import { expect } from 'chai'
 import { DOMWindow } from 'jsdom'
+// import * as fetchMock from 'fetch-mock'
 import { createMocks } from '../mocks'
 
 
@@ -29,4 +30,20 @@ describe('landing page', () => {
     accordionItems[1].click()
     expect(window.getComputedStyle(accordionItems[0].querySelector('.panel')!).display).to.equal('none')
   })
+
+  // it('sends a request and displays the results when subscribing', () => {
+
+  //   fetchMock.mock({ url: '/v1/subscribe', method: 'POST' }, 'OK')
+
+  //   const emailInput = window.document.querySelector('.newsletter__email')! as HTMLInputElement
+  //   const subscribeButton = window.document.querySelector('.newsletter__submit') as HTMLButtonElement
+
+  //   const resultDiv = window.document.querySelector('.newsletter__result')
+  //   expect(window.getComputedStyle(resultDiv!).display).to.equal('none')
+
+  //   emailInput.value = 'test@testing.com'
+  //   subscribeButton.click()
+
+  //   expect(window.getComputedStyle(resultDiv!).display).to.equal('block')
+  // })
 })
