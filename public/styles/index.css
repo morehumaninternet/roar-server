@@ -169,7 +169,8 @@
 }
 
 .slack:hover {
-  border: 1px solid var(--human-pink);
+  border: 1px solid var(--human-blue);
+  background-color: var(--human-blue);
   color: white;
 }
 

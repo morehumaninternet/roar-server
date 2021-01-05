@@ -1,12 +1,12 @@
 // tslint:disable:no-expression-statement no-let
 import { expect } from 'chai'
 import { DOMWindow } from 'jsdom'
-// import * as sinon from 'sinon'
-// import * as fetchMock from 'fetch-mock'
+import * as sinon from 'sinon'
+import * as fetchMock from 'fetch-mock'
 import { createMocks } from '../mocks'
 
 
-describe('landing page', () => {
+describe.only('landing page', () => {
   const mocks = createMocks()
 
   let window: DOMWindow
@@ -32,19 +32,23 @@ describe('landing page', () => {
     expect(window.getComputedStyle(accordionItems[0].querySelector('.panel')!).display).to.equal('none')
   })
 
-  // it.only('sends a request and displays the results when subscribing', () => {
-  //   sinon.stub(window, 'fetch')
-  //   fetchMock.mock({ url: '/v1/subscribe', method: 'POST' }, 'OK')
+  it('sends a request and displays the results when subscribing', (done) => {
 
-  //   const emailInput = window.document.querySelector('.newsletter__email')! as HTMLInputElement
-  //   const subscribeButton = window.document.querySelector('.newsletter__submit') as HTMLButtonElement
+    window.fetch = sinon.stub().resolves({ ok: true })
 
-  //   const resultDiv = window.document.querySelector('.newsletter__result')
-  //   expect(window.getComputedStyle(resultDiv!).display).to.equal('none')
+    const emailInput = window.document.querySelector('.newsletter__email')! as HTMLInputElement
+    const subscribeButton = window.document.querySelector('.newsletter__submit') as HTMLButtonElement
 
-  //   emailInput.value = 'test@testing.com'
-  //   subscribeButton.click()
+    const resultDiv = window.document.querySelector('.newsletter__result')
+    expect(window.getComputedStyle(resultDiv!).display).to.equal('none')
 
-  //   expect(window.getComputedStyle(resultDiv!).display).to.equal('block')
-  // })
+    emailInput.value = 'test@testing.com'
+
+    const mutationObserver = new window.MutationObserver(() => {
+      expect(window.getComputedStyle(resultDiv!).display).to.equal('block')
+      done()
+    })
+    mutationObserver.observe(resultDiv!, { attributes: true })
+    subscribeButton.click()
+  })
 })
