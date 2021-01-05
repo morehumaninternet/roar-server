@@ -23,12 +23,12 @@ describe('/website', () => {
 
   it('200s responding with the twitter_handle pulled from the appropriate meta tag when not previously found', async () => {
     const response = await mocks.agent
-      .get('/v1/website?domain=airbnb.com')
+      .get('/v1/website?domain=github.com')
       .expect(200)
 
     expect(response.body).to.eql({
-      domain: 'airbnb.com',
-      twitter_handle: '@airbnb'
+      domain: 'github.com',
+      twitter_handle: '@github'
     })
   })
 
@@ -36,12 +36,12 @@ describe('/website', () => {
     sinon.stub(axios, 'get').throws('Should not be called')
 
     const response = await mocks.agent
-      .get('/v1/website?domain=airbnb.com')
+      .get('/v1/website?domain=github.com')
       .expect(200)
 
     expect(response.body).to.eql({
-      domain: 'airbnb.com',
-      twitter_handle: '@airbnb'
+      domain: 'github.com',
+      twitter_handle: '@github'
     })
   })
 
