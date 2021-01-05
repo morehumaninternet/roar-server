@@ -48,17 +48,24 @@ Create a database for both local development & for running tests. If prompted fo
 > createdb -h localhost -U $your_user -W roar_test
 ```
 
-Create a `.env.dev` file at the root level of the project with the connection information for the database you created. Create an account with [Clearbit](https://clearbit.com/) to get a `CLEARBIT_SECRET_API_KEY`. Apply for a Twitter Developer account to get `TWITTER_API_KEY` and `TWITTER_KEY_SECRET`. You may optionally specify a port. By default, the dev server runs on `5004` and the test server runs on `5005`.
+Create a `.env.dev` file at the root level of the project with the connection information for the database you created. Create an account with [Clearbit](https://clearbit.com/) to get a `CLEARBIT_SECRET_API_KEY`. Apply for a Twitter Developer account to get `TWITTER_API_KEY`, `TWITTER_KEY_SECRET`, `TWITTER_ACCESS_TOKEN`, and `TWITTER_TOKEN_SECRET`. You may put the dummy `MAILCHIMP_` variables in below unless you need the `/subscribe` route working. By default, the dev server runs on port `5004`.
 
 ```
 DB_HOST=localhost
 DB_PASS=
 DB_USER=$your_user
 DB_NAME=roar_dev
-PORT=
+
 CLEARBIT_SECRET_API_KEY=
+
 TWITTER_API_KEY=
 TWITTER_KEY_SECRET=
+TWITTER_ACCESS_TOKEN=
+TWITTER_TOKEN_SECRET=
+
+MAILCHIMP_LIST_ID=aaaaaaaaaa
+MAILCHIMP_API_KEY=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-aaa
+MAILCHIMP_SERVER_PREFIX=aaa
 ```
 
 Do the same for `.env.test`. Calls to clearbit should always be stubbed out on test environments.
