@@ -75,7 +75,7 @@ const handleSubmit = async (event) => {
   } else {
     // Server returned 4xx or 5xx
     result = "✖ Something went wrong. "
-    if (response.status === 400) {
+    if (response && response.status === 400) {
       result += "You are already subscribed."
     } else {
       result += "Please wait a few minutes and try again."

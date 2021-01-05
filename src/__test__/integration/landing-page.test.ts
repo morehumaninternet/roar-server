@@ -1,6 +1,7 @@
 // tslint:disable:no-expression-statement no-let
 import { expect } from 'chai'
 import { DOMWindow } from 'jsdom'
+// import * as sinon from 'sinon'
 // import * as fetchMock from 'fetch-mock'
 import { createMocks } from '../mocks'
 
@@ -31,8 +32,8 @@ describe('landing page', () => {
     expect(window.getComputedStyle(accordionItems[0].querySelector('.panel')!).display).to.equal('none')
   })
 
-  // it('sends a request and displays the results when subscribing', () => {
-
+  // it.only('sends a request and displays the results when subscribing', () => {
+  //   sinon.stub(window, 'fetch')
   //   fetchMock.mock({ url: '/v1/subscribe', method: 'POST' }, 'OK')
 
   //   const emailInput = window.document.querySelector('.newsletter__email')! as HTMLInputElement

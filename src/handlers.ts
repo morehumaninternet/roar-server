@@ -7,7 +7,7 @@ import * as twitter from './twitter'
 import passport from './passport'
 import { saveFeedback, extractImageData } from './feedback'
 import { upsertWebsite } from './websites'
-const mailchimp = require('@mailchimp/mailchimp_marketing')
+import * as mailchimp from './mailchimp'
 
 const fromBody = (ctx: IRouterContext, fieldName: string, type: 'string' | 'number' | 'boolean') => {
   const value = ctx.request.body[fieldName]
@@ -133,34 +133,6 @@ export async function logout(ctx: IRouterContext): Promise<any> {
 
 export async function subscribe(ctx: IRouterContext): Promise<any> {
   const email: string = fromBody(ctx, 'email', 'string')
-
-  const { MC_LIST_ID, MC_API_KEY, MC_SERVER_PREFIX } = process.env
-
-  if (!MC_API_KEY || !MC_API_KEY || !MC_SERVER_PREFIX) {
-    throw { status: 500, message: 'Failed to subscribe. It is us, not you. Please contact us to get help' }
-  }
-
-  // tslint:disable-next-line: no-expression-statement
-  mailchimp.setConfig({
-    apiKey: MC_API_KEY,
-    server: MC_SERVER_PREFIX,
-  })
-
-  try {
-    // "pending" status means a confirmation email will be
-    // sent before adding the email to the list
-    // tslint:disable-next-line: no-expression-statement
-    await mailchimp.lists.addListMember(MC_LIST_ID, {
-      email_address: email,
-      status: 'pending',
-    })
-  } catch (error) {
-    // tslint:disable-next-line: no-expression-statement
-    console.error({ error })
-    const status = error.status
-    const message = status === 400 ? 'Failed to subscribe - email already exists.' : 'Failed to subscribe. The subscription service is down'
-    throw { status, message }
-  }
-
+  await mailchimp.subscribe(email) // tslint:disable-line: no-expression-statement
   return Object.assign(ctx.response, { status: 201 })
 }

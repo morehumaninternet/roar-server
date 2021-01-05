@@ -11,8 +11,8 @@ function IntroductionSection() {
         <div className="hero-content">
           <h1 className="hero__header">Powered by you</h1>
           <p className="hero__text">See something broken online?<br />Tell the world and get help with Roar from More Human Internet.</p>
-          <a className="btn btn--download" rel="noopener noreferrer" href="https://morehumaninternet.org">Free Download</a>
-          <button className="btn btn--watch">Watch Video</button>
+          <a className="mui-button mhi-button btn btn--download" rel="noopener noreferrer" href="https://morehumaninternet.org">Free Download</a>
+          <button className="mui-button mhi-button btn btn--watch">Watch Video</button>
         </div>
         <img className="hero__gif" src="demo_video.gif" />
       </div>
@@ -120,14 +120,14 @@ function Accordion() {
 function GetUpdatesSection() {
   return (
     <section className="get-updates">
-      <a className="slack" target="_blank" rel="noopener noreferrer" href="https://join.slack.com/t/morehumaninternet/shared_invite/zt-kkbdraz8-XT5~cViVQTJlzaklWgj7Dg">
+      <a className="mui-button mhi-button slack" target="_blank" rel="noopener noreferrer" href="https://join.slack.com/t/morehumaninternet/shared_invite/zt-kkbdraz8-XT5~cViVQTJlzaklWgj7Dg">
           {SlackIcon}
           <p className="slack__text">Join our Slack channel</p>
       </a>
       <div className="newsletter">
         <form className="newsletter__form">
           <input className="newsletter__email" type="email" placeholder="email" required/>
-          <button className="newsletter__submit" type="submit">Get updates</button>
+          <button className="mui-button mhi-button newsletter__submit" type="submit">Get updates</button>
         </form>
         <p className="newsletter__promise">* We hate spam and won’t ever share your email with anyone else</p>
         <p className="newsletter__result hide"></p>

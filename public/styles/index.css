@@ -41,18 +41,22 @@
 
 .btn {
   padding: 10px 10px;
-  border: none;
-  cursor: pointer;
 }
 
 .btn--download {
   background-color: var(--human-blue);
   color: white;
-  text-decoration: none;
 }
 
 .btn--watch {
+  background-color: white;
   color: var(--human-blue);
+
+  margin-left: 10px;
+}
+
+.btn--watch:hover {
+  color: white;
 }
 
 .modal {
@@ -152,25 +156,21 @@
 
 .slack {
   height: 44px;
+  background-color: white;
   color: var(--human-blue);
   font-weight: bold;
   grid-column: 2;
   align-self: flex-start;
 
   border: 1px solid var(--human-blue);
-  border-radius: 5px;
 
   display: flex;
   gap: 0.2rem;
-  justify-content: center;
-  align-items: center;
-
-  text-decoration: none;
-  cursor: pointer;
 }
 
-.slack__text {
-  margin: 0;
+.slack:hover {
+  border: 1px solid var(--human-pink);
+  color: white;
 }
 
 .newsletter {
@@ -186,21 +186,18 @@
 .newsletter__email {
   height: 100%;
   flex-grow: 1;
-  color: white;
-  background-color: var(--human-blue);
-  border: none;
-  padding: 0.8rem 0.8rem;
-  border-radius: 5px 0 0 5px;
+  outline: none;
+  color: var(--human-blue);
+  padding: 0 1rem;
+  border: 1px solid var(--human-blue);
+  border-radius: 4px 0 0 4px;
 }
 
 .newsletter__submit {
   height: 100%;
-  background-color: var(--human-pink);
-  border: none;
-  padding: 0.8rem 0.8rem;
+  background-color: var(--human-blue);
   color: white;
-  border-radius: 0 5px 5px 0;
-  cursor: pointer;
+  border-radius: 0 4px 4px 0;
 }
 
 .newsletter__promise {
