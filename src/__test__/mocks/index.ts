@@ -31,7 +31,7 @@ export function createMocks(withRouter?: (router: Router) => Router): Mocks {
     if (mocked) throw new Error("A mock server is already active. Check that you're calling createMocks at the top-level of a describe block")
     mocked = true
   })
-  before(() => knexCleaner.clean(db as any))
+  before(() => knexCleaner.clean(db as any, { ignoreTables: ['knex_migrations', 'knex_migrations_lock'] }))
   before(() => server = app.listen())
   before(() => agent = request.agent(server))
   after(() => server.close())
