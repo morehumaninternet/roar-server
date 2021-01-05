@@ -3,7 +3,7 @@
 import { expect } from 'chai'
 import * as sinon from 'sinon'
 import axios from 'axios'
-import * as clearbit from '../../clearbit'
+import * as clearbit from '../../external-apis/clearbit'
 import { createMocks } from '../mocks'
 
 

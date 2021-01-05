@@ -4,6 +4,7 @@ import * as path from 'path'
 import * as send from 'koa-send'
 import { readdirSync } from 'fs'
 import { parse, ParsedPath } from 'path'
+import passport from './auth/passport'
 import * as handlers from './handlers'
 
 declare module 'koa-router' {
@@ -11,6 +12,18 @@ declare module 'koa-router' {
     render(view: string, data?: any): any
   }
 }
+
+type MappedHandlers = {
+  [key in keyof typeof handlers]: (ctx: Router.IRouterContext) => Promise<any>
+}
+
+const mappedHandlers: MappedHandlers = Object.keys(handlers).reduce((mh: MappedHandlers, key: keyof typeof handlers) => {
+  const handler = handlers[key]
+  return {
+    [key]: async (ctx: Router.IRouterContext) => Object.assign(ctx.response, await handler(ctx)),
+    ...mh
+  }
+}, {} as MappedHandlers)
 
 // Sychronously yield all files in the given directory, searching recursively
 function* files(dir: string): IterableIterator<ParsedPath & { full: string }> {
@@ -28,13 +41,23 @@ function* files(dir: string): IterableIterator<ParsedPath & { full: string }> {
 export function createRouter(withRouter: (router: Router) => Router = identity): Router {
 
   const v1Router = withRouter(new Router())
-    .get('/website', handlers.getWebsite)
-    .get('/auth/twitter', handlers.authTwitter)
-    .get('/auth/twitter/callback', handlers.authTwitterCallback)
-    .get('/me', handlers.getMe)
-    .post('/feedback', handlers.postFeedback)
-    .post('/logout', handlers.logout)
-    .post('/subscribe', handlers.subscribe)
+    .get('/website', mappedHandlers.getWebsite)
+    // Redirect the user to Twitter for authentication. When complete, Twitter
+    // will redirect the user back to the application at
+    // /auth/twitter/callback
+    .get('/auth/twitter', passport.authenticate('twitter'))
+    // Twitter will redirect the user to this URL after approval. Finish the
+    // authentication process by attempting to obtain an access token. If
+    // access was granted, the user will be logged in. Otherwise,
+    // authentication has failed.
+    .get('/auth/twitter/callback', passport.authenticate('twitter', {
+      successRedirect: '/auth-success',
+      failureRedirect: '/welcome'
+    }))
+    .get('/me', mappedHandlers.getMe)
+    .post('/feedback', mappedHandlers.postFeedback)
+    .post('/logout', mappedHandlers.logout)
+    .post('/subscribe', mappedHandlers.subscribe)
     .get('/fail', () => { throw new Error('Failure!') })
 
   const router = new Router()

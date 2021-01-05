@@ -3,7 +3,7 @@ import { promisify } from 'util'
 import { readFile as fsReadFile } from 'fs'
 import { File } from 'formidable'
 import { flatten } from 'lodash'
-import db from './db'
+import db from '../db'
 
 const readFile = promisify(fsReadFile)
 

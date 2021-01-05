@@ -1,6 +1,6 @@
 import * as passport from 'koa-passport'
 import * as passportTwitter from 'passport-twitter'
-import * as users from './users'
+import * as users from '../models/users'
 
 
 const host = process.env.NODE_ENV === 'prod'
