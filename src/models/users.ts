@@ -1,6 +1,6 @@
 
 import { Profile as TwitterProfile } from 'passport-twitter'
-import db from './db'
+import db from '../db'
 const upsert = require('knex-upsert')
 
 export type Profile = Pick<TwitterProfile, 'id' | 'username' | 'displayName' | 'photos' | 'emails'>

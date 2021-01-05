@@ -8,8 +8,8 @@ const cookieParser = require('koa-cookie')
 const react = require('koa-react-view')
 const register = require('babel-register')
 import * as errorHandling from './errorHandling'
-import sessionStore from './sessionStore'
-import passport from './passport'
+import sessionStore from './auth/sessionStore'
+import passport from './auth/passport'
 import { createRouter } from './router'
 
 

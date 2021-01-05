@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import * as http from 'http'
 import * as sinon from 'sinon'
 import * as Twit from 'twit'
-import * as users from '../../users'
+import * as users from '../../models/users'
 import { createMocks } from '../mocks'
 import { Socket } from 'net'
 

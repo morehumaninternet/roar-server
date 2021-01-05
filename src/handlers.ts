@@ -1,13 +1,13 @@
 import { IRouterContext } from 'koa-router'
 import { File } from 'formidable'
 import db from './db'
-import * as scrape from './scrape'
-import * as clearbit from './clearbit'
-import * as twitter from './twitter'
-import passport from './passport'
-import { saveFeedback, extractImageData } from './feedback'
-import { upsertWebsite } from './websites'
 import * as mailchimp from './mailchimp'
+import * as scrape from './external-apis/scrape'
+import * as clearbit from './external-apis/clearbit'
+import * as twitter from './external-apis/twitter'
+import passport from './auth/passport'
+import { saveFeedback, extractImageData } from './models/feedback'
+import { upsertWebsite } from './models/websites'
 
 const fromBody = (ctx: IRouterContext, fieldName: string, type: 'string' | 'number' | 'boolean') => {
   const value = ctx.request.body[fieldName]
