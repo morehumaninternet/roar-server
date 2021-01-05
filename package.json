@@ -13,6 +13,7 @@
     "test:watch": "npm run clean && npm run compile && { npm run compile:watch &\nmocha --timeout 20000 --require source-map-support/register --require test_setup.js 'compiled/**/*.test.js' --watch --watch-extensions js &\nwait\n}"
   },
   "dependencies": {
+    "@mailchimp/mailchimp_marketing": "3.0.27",
     "@sentry/node": "5.27.3",
     "@sentry/tracing": "5.27.3",
     "axios": "0.21.0",

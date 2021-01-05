@@ -3,7 +3,7 @@
 */
 // tslint:disable:no-expression-statement
 import * as request from 'supertest'
-import { JSDOM, DOMWindow, ResourceLoader } from 'jsdom'
+import { JSDOM, DOMWindow, ResourceLoader, VirtualConsole } from 'jsdom'
 
 
 const fakeUrl = 'https://test-roar.morehumaninternet.org'
@@ -29,10 +29,14 @@ function loadAllLinksAndScripts(window: DOMWindow): Promise<any> {
 export async function getWindow(agent: request.SuperTest<request.Test>, path: string): Promise<DOMWindow> {
   const response = await agent.get(path)
 
+
+  const virtualConsole = new VirtualConsole()
+  virtualConsole.sendTo(console)
   const { window } = new JSDOM(response.text, {
     url: fakeUrl,
     pretendToBeVisual: true,
     runScripts: 'dangerously',
+    virtualConsole,
     resources: Object.assign(new ResourceLoader(), {
       // Fetch resources from the given agent for urls starting with our fake server url
       // Return blank files for all other resources
@@ -45,6 +49,7 @@ export async function getWindow(agent: request.SuperTest<request.Test>, path: st
     }),
   })
 
+  // Make sure all the resources were loaded before running the tests
   await loadAllLinksAndScripts(window)
   return window
 }

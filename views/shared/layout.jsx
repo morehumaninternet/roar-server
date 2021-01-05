@@ -25,7 +25,7 @@ module.exports = function Layout(props) {
         <meta name="twitter:description" content={description} />
         <meta name="msapplication-TileColor" content="#164176" />
         <meta name="theme-color" content="#ffffff" />
-        {['normalize.css', 'common.css'].concat(stylesheets).map(href => (
+        {['normalize.css', 'common.css', 'buttons.css'].concat(stylesheets).map(href => (
           <link type="text/css" rel="stylesheet" key={href} href={href} />
         ))}
       </head>

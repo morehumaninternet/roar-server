@@ -7,6 +7,7 @@ import * as twitter from './twitter'
 import passport from './passport'
 import { saveFeedback, extractImageData } from './feedback'
 import { upsertWebsite } from './websites'
+import * as mailchimp from './mailchimp'
 
 const fromBody = (ctx: IRouterContext, fieldName: string, type: 'string' | 'number' | 'boolean') => {
   const value = ctx.request.body[fieldName]
@@ -128,4 +129,10 @@ export const postFeedback = async (ctx: IRouterContext): Promise<any> => {
 export async function logout(ctx: IRouterContext): Promise<any> {
   ctx.session = null // tslint:disable-line: no-expression-statement
   return Object.assign(ctx.response, { status: 200, body: { loggedOut: true } })
+}
+
+export async function subscribe(ctx: IRouterContext): Promise<any> {
+  const email: string = fromBody(ctx, 'email', 'string')
+  await mailchimp.subscribe(email) // tslint:disable-line: no-expression-statement
+  return Object.assign(ctx.response, { status: 201 })
 }

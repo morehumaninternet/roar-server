@@ -22,37 +22,40 @@ jobs:
           - 6379:6379
 
     steps:
-    - name: Set branch name
-      id: vars
-      shell: bash
-      run: |
-        echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-    - uses: actions/checkout@v2
-    - name: Test
-      uses: actions/setup-node@v1
-      with:
-        node-version: 14.x
-    - run: npm install
-    - run: npm run lint
-    - run: |
-        cat << EOF > .env.test
-        DB_HOST=0.0.0.0
-        DB_PASS=password
-        DB_USER=roar
-        DB_NAME=roar_test
-        TWITTER_API_KEY=aaaaaaaaaaaaaaaaaaaaaaaaa
-        TWITTER_KEY_SECRET=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-        TWITTER_ACCESS_TOKEN=aaaaaaaaaaaaaaaaaaa-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-        TWITTER_TOKEN_SECRET=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-        EOF
-    - run: NODE_ENV=test npm run knex migrate:latest
-    - run: npm test
+      - name: Set branch name
+        id: vars
+        shell: bash
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      - uses: actions/checkout@v2
+      - name: Test
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: npm install
+      - run: npm run lint
+      - run: |
+          cat << EOF > .env.test
+          DB_HOST=0.0.0.0
+          DB_PASS=password
+          DB_USER=roar
+          DB_NAME=roar_test
+          TWITTER_API_KEY=aaaaaaaaaaaaaaaaaaaaaaaaa
+          TWITTER_KEY_SECRET=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+          TWITTER_ACCESS_TOKEN=aaaaaaaaaaaaaaaaaaa-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+          TWITTER_TOKEN_SECRET=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+          MAILCHIMP_LIST_ID=aaaaaaaaaa
+          MAILCHIMP_API_KEY=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-aaa
+          MAILCHIMP_SERVER_PREFIX=aaa
+          EOF
+      - run: NODE_ENV=test npm run knex migrate:latest
+      - run: npm test
 
-    - uses: 8398a7/action-slack@v3
-      with:
-        status: ${{ job.status }}
-        fields: workflow,job,commit,repo,ref,author,took
-      if: always()
-      env:
-        CI: true
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ENGINEERING_CHANNEL_WEBHOOK_URL }}
+      - uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: workflow,job,commit,repo,ref,author,took
+        if: always()
+        env:
+          CI: true
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ENGINEERING_CHANNEL_WEBHOOK_URL }}
