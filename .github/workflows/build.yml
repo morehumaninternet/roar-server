@@ -34,6 +34,7 @@ jobs:
           node-version: 14.x
       - run: npm install
       - run: npm run lint
+      - run: cp .example.env .env.test
       - run: NODE_ENV=test npm run knex migrate:latest
       - run: npm test
 

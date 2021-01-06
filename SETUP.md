@@ -48,7 +48,7 @@ Create a database tied to a user name you specify for both local development & f
 > createdb -h localhost -U $your_user -W roar_test
 ```
 
-Create a `.env.dev` file at the root level of the project with the connection information for the database you created. The `.default.env` file contains dummy variables that you'll need to override in the `.env.dev` file with secrets to external APIs, but if you're just working on the views, just the database info should be enough to get you off the ground. For other environment variables, reach out to Shachar Langer or Will Weiss to get set up.
+Copy the  `.example.env` into `.env.dev` and add the the connection information for the database you just created. You'll see dummy variables that you'll need to override in the `.env.dev` file with secrets to use external APIs, but if you're just working on the views, just the database info should be enough to get you off the ground. For other environment variables, reach out to Shachar Langer or Will Weiss to get set up.
 
 ```
 DB_HOST=localhost
@@ -57,7 +57,7 @@ DB_USER=$your_user
 DB_NAME=roar_dev
 ```
 
-Do the same for `.env.test`. Calls to clearbit should always be stubbed out on test environments.
+Do the same for the test environment by copying  `.example.env` to `.env.test` and overwriting the environment variables to connect to the database
 
 ```
 DB_HOST=localhost
