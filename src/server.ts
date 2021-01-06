@@ -1,22 +1,13 @@
 // tslint:disable:no-expression-statement
-import * as Koa from 'koa'
+import Koa = require('koa')
 import * as Router from 'koa-router'
-import * as path from 'path'
 import bodyParser = require('koa-body')
-import * as session from 'koa-session'
-const cookieParser = require('koa-cookie')
-const react = require('koa-react-view')
-const register = require('babel-register')
+import session = require('koa-session')
+import cookieParser = require('koa-cookie')
 import * as errorHandling from './errorHandling'
 import sessionStore from './auth/sessionStore'
 import passport from './auth/passport'
 import { createRouter } from './router'
-
-
-register({
-  presets: ['es2015', 'react'],
-  extensions: ['.jsx'],
-})
 
 export function createServer(withRouter?: (router: Router) => Router): Koa {
   const server = errorHandling.configureServer(new Koa())
@@ -34,16 +25,19 @@ export function createServer(withRouter?: (router: Router) => Router): Koa {
     })
   }
 
-  react(server, { views: path.join(__dirname, '..', 'views') })
-
   server.use(bodyParser({ multipart: true, jsonLimit: '50mb' }))
-  server.use(cookieParser.default())
+  server.use((cookieParser as any).default())
 
-  server.use(session({
-    secure: process.env.NODE_ENV !== 'test',
-    sameSite: 'none',
-    store: sessionStore,
-  }, server))
+  server.use(
+    session(
+      {
+        secure: process.env.NODE_ENV !== 'test',
+        sameSite: 'none',
+        store: sessionStore,
+      },
+      server
+    )
+  )
 
   server.use(passport.initialize())
   server.use(passport.session())

@@ -1,16 +1,16 @@
 {
   "scripts": {
-    "clean": "rm -rf compiled",
-    "compile": "tsc",
-    "compile:watch": "tsc -w",
-    "dev": "npm run clean && npm run compile && { npm run compile:watch &\n NODE_ENV=dev nodemon &\n wait\n }",
+    "build": "npm run clear && node build.js",
+    "build:ensure": "{ [ -d compiled ] && [ -d css ] && [ -d html ] ; } || npm run build",
+    "clear": "concurrently 'rimraf compiled' 'rimraf css' 'rimraf html'",
+    "dev": "NODE_ENV=dev npm run build -- --watch",
     "lint": "{ find src -name '*.ts' | xargs tslint --project tsconfig.json --config tslint.json ; }",
     "knex": "knex -- \"$@\"",
-    "postinstall": "npm run compile",
-    "coverage": "npm run clean && npm run compile && istanbul cover -x '**/*.test.js*' -x '**/__test__/**/*.*' -x '**/entry.js' _mocha --root compiled --include-all-sources true -- --timeout 5000 --require test_setup.js 'compiled/**/*.test.js' && remap-istanbul -i coverage/coverage.json -o html-report -t html",
-    "start": "node compiled/entry.js",
-    "test": "npm run clean && npm run compile && mocha --timeout 20000 --require source-map-support/register --require test_setup.js 'compiled/**/*.test.js'",
-    "test:watch": "npm run clean && npm run compile && { npm run compile:watch &\nmocha --timeout 20000 --require source-map-support/register --require test_setup.js 'compiled/**/*.test.js' --watch --watch-extensions js &\nwait\n}"
+    "postinstall": "npm run build",
+    "start": "node -r source-map-support/register compiled/entry.js",
+    "test": "npm run build:ensure && nyc $NYC_OPTS --exclude src/types.ts --exclude src/__test__ mocha $MOCHA_OPTS --require test_setup.js 'compiled/**/*.test.js'",
+    "test:coverage": "NYC_OPTS='--reporter=lcov' npm test",
+    "views": "node views.js"
   },
   "dependencies": {
     "@mailchimp/mailchimp_marketing": "3.0.27",
@@ -29,7 +29,6 @@
     "koa-cookie": "1.0.0",
     "koa-helmet": "4.0.0",
     "koa-passport": "4.1.3",
-    "koa-react-view": "3.0.0",
     "koa-redis": "4.0.1",
     "koa-router": "7.2.0",
     "koa-send": "5.0.0",
@@ -39,6 +38,8 @@
     "node-uuid": "1.4.8",
     "passport-twitter": "1.0.4",
     "pg": "8.2.1",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
     "twit": "2.2.11"
   },
   "devDependencies": {
@@ -64,27 +65,44 @@
     "@types/node-uuid": "0.0.28",
     "@types/passport-twitter": "1.0.36",
     "@types/pg": "7.14.3",
+    "@types/react": "17.0.0",
+    "@types/react-dom": "17.0.0",
     "@types/sinon": "9.0.8",
     "@types/sinon-chai": "2.7.27",
     "@types/supertest": "2.0.9",
     "@types/twit": "2.2.28",
     "chai": "3.4.1",
     "chai-http": "4.3.0",
-    "istanbul": "0.4.5",
+    "chalk": "4.1.0",
+    "chokidar": "3.4.3",
+    "clear-module": "4.1.1",
+    "concurrently": "5.3.0",
+    "husky": "4.3.0",
     "jsdom": "16.4.0",
     "knex-cleaner": "1.3.1",
+    "mkdirp": "1.0.4",
     "mocha": "7.1.2",
-    "nodemon": "2.0.6",
-    "remap-istanbul": "0.11.1",
+    "nyc": "15.1.0",
+    "prettier": "2.1.2",
+    "pretty-quick": "3.1.0",
+    "rimraf": "3.0.2",
+    "sass": "1.27.1",
     "sinon": "9.2.0",
     "sinon-chai": "2.8.0",
-    "source-map-support": "0.4.11",
+    "source-map-support": "0.5.19",
+    "strip-ansi": "6.0.0",
     "supertest": "4.0.2",
+    "tee": "0.2.0",
     "tslint": "5.8.0",
     "tslint-immutable": "4.4.0",
     "typescript": "4.0.3"
   },
   "engines": {
     "node": "14.x"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint && pretty-quick --staged --pattern \"src/**/*.*(ts|tsx)\""
+    }
   }
 }

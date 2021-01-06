@@ -9,6 +9,8 @@ events/
 projections/
 coverage/
 html-report/
+css/
+html/
 
 # Logs
 logs

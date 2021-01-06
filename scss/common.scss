@@ -1,9 +1,5 @@
-:root {
-  --human-blue: #164176;
-  --human-pink: #fa759e;
-  --human-grey: #dfdfdf;
-  --human-pink-light: #fa759ea6;
-}
+@import './shared/colors.scss';
+@import './shared/buttons.scss';
 
 * {
   box-sizing: border-box;
@@ -53,7 +49,7 @@ footer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: var(--human-blue);
+  color: $human-blue;
 }
 
 .mhi-logo > h4 > svg {
@@ -64,22 +60,22 @@ footer {
 }
 
 .top-right {
-  fill: var(--human-blue);
+  fill: $human-blue;
 }
 
 .more {
-  fill: var(--human-blue);
+  fill: $human-blue;
 }
 
 .internet {
-  fill: var(--human-blue);
+  fill: $human-blue;
 }
 
 .bottom-left {
-  fill: var(--human-pink);
+  fill: $human-pink;
 }
 .human {
-  fill: var(--human-pink);
+  fill: $human-pink;
 }
 
 .footer-banner {
@@ -87,7 +83,7 @@ footer {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  background-color: var(--human-blue);
+  background-color: $human-blue;
   width: 100%;
   margin-top: 5rem;
   padding: 0 1rem;

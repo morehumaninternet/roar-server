@@ -1,6 +1,5 @@
-import * as knex from 'knex'
+import knex = require('knex')
 const config = require('../knexfile.js')
-
 
 const db = knex(config)
 
