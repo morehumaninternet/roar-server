@@ -3,7 +3,7 @@ const Layout = require('./shared/layout')
 
 function PrivacySection() {
   return (
-    <div className="privacy-section">
+    <div className="privacy-tos-section">
       
       <h1>Privacy Policy</h1>
       <h3>1. Information Collection & Usage</h3>
@@ -25,7 +25,7 @@ function PrivacySection() {
       <p>We may update this Privacy Policy to reflect changes in our information practices. If we make any material changes, we will provide notice on this website, and we may notify you by email (sent to the email address specified in your account), prior to the change becoming effective. We encourage you to periodically review this page for the latest information on our privacy practices. If you continue to use the Services after those changes are in effect, you agree to the revised policy.</p>
 
       <h3>6. Dispute Resolution</h3>
-      <p>If you have a complaint about More Human Internet’s privacy policies, please let us know at privacy@morehumaninternet.org.</p>
+      <p>If you have a complaint about More Human Internet’s privacy policies, please let us know at <a target="_blank" href="mailto:privacy@morehumaninternet.org">privacy@morehumaninternet.org</a>.</p>
 
     </div>
   )
@@ -33,7 +33,7 @@ function PrivacySection() {
 
 module.exports = function Privacy() {
   return (
-    <Layout stylesheets="index.css">
+    <Layout stylesheets="privacy-tos.css">
       <PrivacySection />
     </Layout>
   )

@@ -36,6 +36,7 @@ const commands = [
   scssCommand('common', green),
   scssCommand('index', green),
   scssCommand('welcome', green),
+  scssCommand('privacy-tos', green),
   {
     name: gold(`typescript`),
     command: `./node_modules/.bin/tsc ${watchMode ? '--watch --preserveWatchOutput' : ''}`

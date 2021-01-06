@@ -3,18 +3,18 @@ const Layout = require('./shared/layout')
 
 function TosSection() {
   return (
-    <div className="tos-section">
+    <div className="privacy-tos-section">
       
       <h1>Terms & Conditions</h1>
       <h3>1. License Grant</h3>
       <p>We grant you a worldwide, non-exclusive and non-transferable right to use our services.</p>
 
       <h3>2. Support</h3>
-      <p>If you are in need of support, contact us at support@morehumaninternet.org. 
+      <p>If you are in need of support, contact us at <a target="_blank" href="mailto:support@morehumaninternet.org">support@morehumaninternet.org</a>. 
       </p>
 
       <h3>3. Copyright Infringement</h3>
-      <p>If you believe that our Services have been used in a way that constitutes copyright infringement, you should follow the process outlined here: https://www.dmca.com/faq/Report-copyright-infringement</p>
+      <p>If you believe that our Services have been used in a way that constitutes copyright infringement, you should follow the process outlined here: <a target="_blank" href="https://www.dmca.com/faq/Report-copyright-infringement">https://www.dmca.com/faq/Report-copyright-infringement</a>.</p>
 
       <h3>4. Disclaimer of Warranties</h3>
       <p>Our Service is provided “as is.” We hereby disclaim all warranties of any kind, express or implied, including, without limitation, the warranties of merchantability, fitness for a particular purpose and non-infringement. We make no warranty that our Services will be error-free or that access thereto will be continuous or uninterrupted. You understand that you download from, or otherwise obtain content or services through, our Services at your own discretion and risk.</p>
@@ -34,7 +34,7 @@ function TosSection() {
 
 module.exports = function Privacy() {
   return (
-    <Layout stylesheets="index.css">
+    <Layout stylesheets="privacy-tos.css">
       <TosSection />
     </Layout>
   )
