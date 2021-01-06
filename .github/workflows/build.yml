@@ -34,20 +34,6 @@ jobs:
           node-version: 14.x
       - run: npm install
       - run: npm run lint
-      - run: |
-          cat << EOF > .env.test
-          DB_HOST=0.0.0.0
-          DB_PASS=password
-          DB_USER=roar
-          DB_NAME=roar_test
-          TWITTER_API_KEY=aaaaaaaaaaaaaaaaaaaaaaaaa
-          TWITTER_KEY_SECRET=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-          TWITTER_ACCESS_TOKEN=aaaaaaaaaaaaaaaaaaa-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-          TWITTER_TOKEN_SECRET=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-          MAILCHIMP_LIST_ID=aaaaaaaaaa
-          MAILCHIMP_API_KEY=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-aaa
-          MAILCHIMP_SERVER_PREFIX=aaa
-          EOF
       - run: NODE_ENV=test npm run knex migrate:latest
       - run: npm test
 

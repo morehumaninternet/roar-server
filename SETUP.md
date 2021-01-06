@@ -41,32 +41,20 @@ Use the correct node version and install node_modules.
 > npm install
 ```
 
-Create a database for both local development & for running tests. If prompted for a password, leave it blank.
+Create a database tied to a user name you specify for both local development & for running tests. If prompted for a password, you may leave it blank.
 
 ```bash
 > createdb -h localhost -U $your_user -W roar_dev
 > createdb -h localhost -U $your_user -W roar_test
 ```
 
-Create a `.env.dev` file at the root level of the project with the connection information for the database you created. Create an account with [Clearbit](https://clearbit.com/) to get a `CLEARBIT_SECRET_API_KEY`. Apply for a Twitter Developer account to get `TWITTER_API_KEY`, `TWITTER_KEY_SECRET`, `TWITTER_ACCESS_TOKEN`, and `TWITTER_TOKEN_SECRET`. You may put the dummy `MAILCHIMP_` variables in below unless you need the `/subscribe` route working. By default, the dev server runs on port `5004`.
+Create a `.env.dev` file at the root level of the project with the connection information for the database you created. The `.default.env` file contains dummy variables that you'll need to override in the `.env.dev` file with secrets to external APIs, but if you're just working on the views, just the database info should be enough to get you off the ground. For other environment variables, reach out to Shachar Langer or Will Weiss to get set up.
 
 ```
 DB_HOST=localhost
 DB_PASS=
 DB_USER=$your_user
 DB_NAME=roar_dev
-
-CLEARBIT_SECRET_API_KEY=
-
-TWITTER_API_KEY=
-TWITTER_KEY_SECRET=
-TWITTER_ACCESS_TOKEN=
-TWITTER_TOKEN_SECRET=
-
-MAILCHIMP_LIST_ID=aaaaaaaaaa
-MAILCHIMP_API_KEY=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-aaa
-MAILCHIMP_SERVER_PREFIX=aaa
-
 ```
 
 Do the same for `.env.test`. Calls to clearbit should always be stubbed out on test environments.
@@ -76,9 +64,6 @@ DB_HOST=localhost
 DB_PASS=
 DB_USER=$your_user
 DB_NAME=roar_test
-PORT=
-TWITTER_API_KEY=
-TWITTER_KEY_SECRET=
 ```
 
 Run the [database migrations](/db/migrations) for each.
@@ -88,9 +73,9 @@ Run the [database migrations](/db/migrations) for each.
 > NODE_ENV=test npm run knex migrate:latest
 ```
 
-Start a redis server
+Start a redis server in another terminal window.
 
-```
+```bash
 > redis-server
 ```
 
@@ -102,8 +87,17 @@ Run end-to-end tests.
 
 The development environment requires a valid certificate. You can find a certificate [here](/certs/localhost.crt). This is a self-signed certificate so you need to tell your OS to trust it. See instructions [here](https://reactpaths.com/how-to-get-https-working-in-localhost-development-environment-f17de34af046#0fc3), but note that our certificate is called 'roar-server'. In addition, you might need to approve the certificate with your browser. If you see a warning message on Chrome, click on the "Advanced" button and then on the "Process to ... (unsafe)". If you see a warning message on Firefox, click on the "Advanced..." button and then on the "Accept the Risk and Continue".
 
-Start a development server and watch source files in [/src](/src).
+Build source files in [/src](/src), [/scss](/scss), and [/views](/views) and start a server that reboots whenever any of those files change.
 
-```bash
+```
 > npm run dev
+
+🎉 First build successful! Continuing to watch files...
+
+
+> @ start /Users/willweiss/dev/morehumaninternet/roar-server
+> node -r source-map-support/register compiled/entry.js
+
+roar-server listening on 5004 Wed Jan 06 2021 09:20:20 GMT-0500 (Eastern Standard Time)
+Established connection to redis
 ```
