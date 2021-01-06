@@ -1,5 +1,6 @@
 @import './shared/colors.scss';
 @import './shared/buttons.scss';
+@import './shared/mixins.scss';
 
 * {
   box-sizing: border-box;
@@ -38,8 +39,21 @@ header {
   padding-left: 10px;
 }
 
-/* footer styles  */
+main {
+  @include full_bleed_grid;
+}
 
+section {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+section.full-width {
+  grid-column: 1/4;
+}
+
+/* footer styles  */
 footer {
   font-size: 0.8em;
   padding-top: 2.5rem;

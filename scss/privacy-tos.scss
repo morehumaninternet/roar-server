@@ -1,11 +1,16 @@
 @import './shared/colors.scss';
+@import './shared/mixins.scss';
 
-.privacy-tos-section {
+main {
   background: linear-gradient($human-pink-light, white);
-  color: $human-blue;
-  padding: 10rem 10% 5% 10%;
+  @include full-bleed-grid($min-center-column-width: 80ch);
 }
 
-.privacy-tos-section h3 {
-  padding: 1rem 0;
+.privacy-tos-section {
+  color: $human-blue;
+  padding-top: 10rem;
+
+  h3 {
+    padding: 1rem 0;
+  }
 }

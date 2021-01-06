@@ -3,8 +3,8 @@ const Layout = require('./shared/layout')
 
 function PrivacySection() {
   return (
-    <div className="privacy-tos-section">
-      
+    <section className="privacy-tos-section">
+
       <h1>Privacy Policy</h1>
       <h3>1. Information Collection & Usage</h3>
       <p>We collect your twitter username, profile image, and email address by receiving this information when you authenticate with Twitter.
@@ -27,7 +27,7 @@ function PrivacySection() {
       <h3>6. Dispute Resolution</h3>
       <p>If you have a complaint about More Human Internet’s privacy policies, please let us know at <a target="_blank" href="mailto:privacy@morehumaninternet.org">privacy@morehumaninternet.org</a>.</p>
 
-    </div>
+    </section>
   )
 }
 
@@ -38,4 +38,3 @@ module.exports = function Privacy() {
     </Layout>
   )
 }
-
