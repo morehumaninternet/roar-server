@@ -1,9 +1,8 @@
 import db from '../db'
-const upsert = require('knex-upsert')
+const knexUpsert = require('knex-upsert')
 
-
-export function upsertWebsite(object: { domain: string, twitter_handle: null | string }): Promise<Website> {
-  if (object.domain.startsWith('www.')) {
+export function upsert(object: { url: string; twitter_handle: null | string }): Promise<Website> {
+  if (object.url.startsWith('www.')) {
     throw new Error('Strip www. before creating the website')
   }
 
@@ -11,5 +10,34 @@ export function upsertWebsite(object: { domain: string, twitter_handle: null | s
     throw new Error('Twitter handle must start with a @')
   }
 
-  return upsert({ db, table: 'websites', object, key: 'domain' })
+  return knexUpsert({ db, table: 'websites', object, key: 'url' })
+}
+
+export async function getBestMatching(parsedUrl: ParsedUrl): Promise<any> {
+  const result = await db.raw(
+    `
+    SELECT twitter_handle, url from (
+      SELECT websites.*, 3 as priority
+        FROM websites
+       WHERE url = ?
+
+       UNION
+
+      SELECT websites.*, 2 as priority
+       FROM websites
+      WHERE url = ?
+
+      UNION
+
+     SELECT websites.*, 1 as priority
+       FROM websites
+      WHERE url = ?
+    ) matches
+    ORDER BY priority DESC
+       LIMIT 1
+  `,
+    [parsedUrl.fullWithFirstPath, parsedUrl.host, parsedUrl.hostWithoutSubDomain]
+  )
+
+  return result.rows[0]
 }

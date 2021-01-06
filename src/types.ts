@@ -48,6 +48,14 @@ type SerializedUser = {
   tokenSecret: string
 }
 
+type ParsedUrl = {
+  host: string
+  hostWithoutSubDomain: string
+  subdomain?: string
+  firstPath?: string
+  fullWithFirstPath: string
+}
+
 type Website = {
   id: number
   domain: string

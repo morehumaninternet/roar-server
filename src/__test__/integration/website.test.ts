@@ -30,6 +30,7 @@ describe('/website', () => {
     const response = await mocks.agent.get('/v1/website?domain=github.com').expect(200)
 
     expect(response.body).to.eql({
+      url: 'github.com',
       domain: 'github.com',
       twitter_handle: '@github',
     })
@@ -41,6 +42,7 @@ describe('/website', () => {
     const response = await mocks.agent.get('/v1/website?domain=github.com').expect(200)
 
     expect(response.body).to.eql({
+      url: 'github.com',
       domain: 'github.com',
       twitter_handle: '@github',
     })
@@ -56,6 +58,7 @@ describe('/website', () => {
     const response = await mocks.agent.get('/v1/website?domain=https://generationsinc.org').expect(200)
 
     expect(response.body).to.eql({
+      url: 'generationsinc.org',
       domain: 'generationsinc.org',
       twitter_handle: '@generations',
     })
@@ -66,6 +69,7 @@ describe('/website', () => {
 
     expect(response.body).to.eql({
       url: 'docs.google.com',
+      domain: 'docs.google.com',
       twitter_handle: '@googledocs',
     })
   })
@@ -75,6 +79,7 @@ describe('/website', () => {
 
     expect(response.body).to.eql({
       url: 'docs.google.com',
+      domain: 'docs.google.com',
       twitter_handle: '@googledocs',
     })
   })
@@ -84,6 +89,7 @@ describe('/website', () => {
 
     expect(response.body).to.eql({
       url: 'google.com',
+      domain: 'google.com',
       twitter_handle: '@Google',
     })
   })
@@ -93,6 +99,7 @@ describe('/website', () => {
 
     expect(response.body).to.eql({
       url: 'google.com/maps',
+      domain: 'google.com',
       twitter_handle: '@googlemaps',
     })
   })
