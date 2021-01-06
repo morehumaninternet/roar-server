@@ -26,16 +26,28 @@ const readdir = util.promisify(fs.readdir.bind(fs))
 const writeFile = util.promisify(fs.writeFile.bind(fs))
 const rm = util.promisify(rimraf)
 
+function writeView(file) {
+  const moduleName = `./views/${file.base}`
+  console.log(`Compiling ${moduleName}`)
+  clearModule(moduleName)
+  const component = require(moduleName)
+  const html = ReactDOMServer.renderToStaticMarkup(component())
+  return writeFile(path.join(__dirname, 'html', `${file.name}.html`), html, { encoding: 'utf8' })
+}
+
 async function compileViews() {
   const files = await readdir(path.join(__dirname, '/views'))
   const jsxFiles = files.map(file => path.parse(file)).filter(file => file.ext === '.jsx')
   return Promise.all(jsxFiles.map(file => {
-    const moduleName = `./views/${file.base}`
-    console.log(`Compiling ${moduleName}`)
-    clearModule(moduleName)
-    const component = require(moduleName)
-    const html = ReactDOMServer.renderToStaticMarkup(component())
-    return writeFile(path.join(__dirname, 'html', `${file.name}.html`), html, { encoding: 'utf8' })
+    if (watchMode) {
+      try {
+        writeView(file)
+      } catch (err) {
+        console.error(err)
+      }
+    } else {
+      writeView(file)
+    }
   }))
 }
 

@@ -116,20 +116,6 @@
   width: 60px;
 }
 
-.accordion__container {
-  display: grid;
-  grid-template-columns:
-    minmax(50px, 1fr)
-    minmax(320px, 700px)
-    minmax(50px, 1fr);
-}
-
-.accordion {
-  grid-column: 2;
-  display: flex;
-  flex-direction: column;
-}
-
 /* accordion styles */
 .accordion_header {
   display: flex;
