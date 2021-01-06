@@ -66,6 +66,7 @@ TWITTER_TOKEN_SECRET=
 MAILCHIMP_LIST_ID=aaaaaaaaaa
 MAILCHIMP_API_KEY=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-aaa
 MAILCHIMP_SERVER_PREFIX=aaa
+
 ```
 
 Do the same for `.env.test`. Calls to clearbit should always be stubbed out on test environments.

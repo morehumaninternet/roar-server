@@ -1,18 +1,13 @@
 // Adapted from https://docs.sentry.io/platforms/node/guides/koa/
 // tslint:disable:no-expression-statement
-import * as Koa from 'koa'
+import Koa = require('koa')
 import * as Sentry from '@sentry/node'
 import { extractTraceparentData, stripUrlQueryAndFragment } from '@sentry/tracing'
-
 
 async function requestHandler(ctx: Koa.Context, next: () => Promise<any>): Promise<void> {
   try {
     if (process.env.NODE_ENV === 'prod') {
-      Sentry.getCurrentHub().configureScope(scope =>
-        scope.addEventProcessor(event =>
-          Sentry.Handlers.parseRequest(event, ctx.request, { user: false })
-        )
-      )
+      Sentry.getCurrentHub().configureScope(scope => scope.addEventProcessor(event => Sentry.Handlers.parseRequest(event, ctx.request, { user: false })))
     }
     await next()
   } catch (err) {
