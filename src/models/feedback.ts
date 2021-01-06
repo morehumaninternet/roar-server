@@ -8,11 +8,11 @@ import db from '../db'
 const readFile = promisify(fsReadFile)
 
 type SaveFeedbackParam = {
-  user: SerializedUser,
-  status: string,
-  domain: string,
-  imagesData: ReadonlyArray<FeedbackImageData>,
-  url: string
+  user: SerializedUser
+  status: string
+  websiteUrl: string
+  imagesData: ReadonlyArray<FeedbackImageData>
+  tweetUrl: string
 }
 
 // Only insert feedback_images if they exist.
@@ -21,21 +21,17 @@ const imagesFeedbackSql = (imagesData: ReadonlyArray<FeedbackImageData>) => {
   if (!imagesData.length) return 'SELECT 1'
   return `
     INSERT INTO feedback_images (feedback_id, name, file, file_extension)
-        VALUES ${Array(imagesData.length).fill(
-    '((select id from inserted_feedback), ?, ?, ?)'
-  ).join(',')
-    }
+        VALUES ${Array(imagesData.length).fill('((select id from inserted_feedback), ?, ?, ?)').join(',')}
   `
 }
 
 // Saves feedback and feedback_images in the database, creating a website row if one doesn't already exist
-const saveFeedback = async ({ user, status, domain, imagesData, url }: SaveFeedbackParam) => {
-
+const saveFeedback = async ({ user, status, websiteUrl, imagesData, tweetUrl }: SaveFeedbackParam) => {
   const insertFeedbackSql = `
     WITH inserted_website(id) as (
-      INSERT INTO websites(domain)
+      INSERT INTO websites(url)
           VALUES (?)
-      ON CONFLICT(domain) DO UPDATE SET domain=EXCLUDED.domain
+      ON CONFLICT(url) DO UPDATE SET url=EXCLUDED.url
         RETURNING id
     ),
     inserted_feedback(id) as (
@@ -46,7 +42,7 @@ const saveFeedback = async ({ user, status, domain, imagesData, url }: SaveFeedb
     ${imagesFeedbackSql(imagesData)}
   `
 
-  const defaultQueryArgs: ReadonlyArray<any> = [domain, user.id, status, url]
+  const defaultQueryArgs: ReadonlyArray<any> = [websiteUrl, user.id, status, tweetUrl]
   const imagesQueryArgs = flatten(imagesData.map(imageData => [imageData.name, imageData.file, imageData.file_extension]))
   const queryArgs = defaultQueryArgs.concat(imagesQueryArgs)
   // tslint:disable-next-line: no-expression-statement

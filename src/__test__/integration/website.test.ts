@@ -5,10 +5,19 @@ import * as sinon from 'sinon'
 import axios from 'axios'
 import * as clearbit from '../../external-apis/clearbit'
 import { createMocks } from '../mocks'
+import db from '../../db'
 
 describe('/website', () => {
   const mocks = createMocks()
   let clearBitGetTwitterHandle: sinon.SinonStub
+
+  before(() =>
+    db('websites').insert([
+      { url: 'google.com', twitter_handle: '@Google' },
+      { url: 'docs.google.com', twitter_handle: '@googledocs' },
+      { url: 'google.com/maps', twitter_handle: '@googlemaps' },
+    ])
+  )
 
   beforeEach(() => (clearBitGetTwitterHandle = sinon.stub(clearbit, 'getTwitterHandle').throws()))
   afterEach(() => sinon.restore())
@@ -49,6 +58,42 @@ describe('/website', () => {
     expect(response.body).to.eql({
       domain: 'generationsinc.org',
       twitter_handle: '@generations',
+    })
+  })
+
+  it('works for google docs', async () => {
+    const response = await mocks.agent.get('/v1/website?url=https://docs.google.com').expect(200)
+
+    expect(response.body).to.eql({
+      url: 'docs.google.com',
+      twitter_handle: '@googledocs',
+    })
+  })
+
+  it('works for google docs with a path', async () => {
+    const response = await mocks.agent.get('/v1/website?url=https://docs.google.com/somedoc').expect(200)
+
+    expect(response.body).to.eql({
+      url: 'docs.google.com',
+      twitter_handle: '@googledocs',
+    })
+  })
+
+  it('works for google', async () => {
+    const response = await mocks.agent.get('/v1/website?url=google.com').expect(200)
+
+    expect(response.body).to.eql({
+      url: 'google.com',
+      twitter_handle: '@Google',
+    })
+  })
+
+  it('works for google maps', async () => {
+    const response = await mocks.agent.get('/v1/website?url=google.com/maps').expect(200)
+
+    expect(response.body).to.eql({
+      url: 'google.com/maps',
+      twitter_handle: '@googlemaps',
     })
   })
 })
