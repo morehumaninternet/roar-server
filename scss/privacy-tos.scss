@@ -1,0 +1,11 @@
+@import './shared/colors.scss';
+
+.privacy-tos-section {
+  background: linear-gradient($human-pink-light, white);
+  color: $human-blue;
+  padding: 10rem 10% 5% 10%;
+}
+
+.privacy-tos-section h3 {
+  padding: 1rem 0;
+}
