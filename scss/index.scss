@@ -235,6 +235,25 @@
   display: none;
 }
 
+.tos-section {
+  background: linear-gradient(var(--human-pink-light), white);
+  color: var(--human-blue);
+  padding: 15% 10% 5% 10%;
+}
+
+.tos-section h3 {
+  padding: 1rem 0;
+}
+.privacy-section {
+  background: linear-gradient(var(--human-pink-light), white);
+  color: var(--human-blue);
+  padding: 15% 10% 5% 10%;
+}
+
+.privacy-section h3 {
+  padding: 1rem 0;
+}
+
 /* media query  */
 @media (max-width: 700px) {
   .introduction-section {
