@@ -2,7 +2,11 @@
   Open the video modal when clicking on "Watch Video" or the gif.
   Close the video modal when clicking outside the video or pressing on the Escape key.
 */
+
+const videoSrc= document.querySelector(".modal iframe").attributes.src.value
+
 const toggleModal = () => {
+
   document.querySelector(".modal").classList.toggle("modal--hidden")
 
   let hiddenModal = document.querySelector(".modal").classList.value
@@ -10,7 +14,7 @@ const toggleModal = () => {
   if (hiddenModal === "modal modal--hidden") {
     iFrameDiv.setAttribute("src", '')
   } else {
-    iFrameDiv.setAttribute("src", "https://www.youtube.com/embed/QH2-TGUlwu4")
+    iFrameDiv.setAttribute("src", videoSrc)
   }
 }
 
