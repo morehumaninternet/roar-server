@@ -36,6 +36,7 @@
     "lodash": "4.17.20",
     "mocha.parallel": "0.15.3",
     "node-uuid": "1.4.8",
+    "parse-domain": "3.0.3",
     "passport-twitter": "1.0.4",
     "pg": "8.2.1",
     "react": "17.0.1",

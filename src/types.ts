@@ -1,5 +1,3 @@
-declare module 'babel-register'
-
 type Maybe<T> = T | null | undefined
 
 type Done<T> = (err?: any, result?: T) => void
@@ -64,4 +62,22 @@ type Website = {
   last_checked_clearbit_at?: Date
   created_at: Date
   updated_at: Date
+}
+
+type ParsedDomain = {
+  type: 'LISTED'
+  hostname: string
+  labels: string
+  icann: {
+    subDomains: ReadonlyArray<string>
+    domain: string
+    topLevelDomains: ReadonlyArray<string>
+  }
+  subDomains: ReadonlyArray<string>
+  domain: string
+  topLevelDomains: ReadonlyArray<string>
+}
+
+declare module 'parse-domain' {
+  export function parseDomain(url: URL): ParsedDomain
 }
