@@ -2,7 +2,7 @@ const React = require('react')
 const Layout = require('./shared/layout')
 const stepIcons = require('./components/step-icons')
 const { SlackIcon } = require('./components/slack-icon')
-
+const SocialMediaBar = require('./components/social-media-bar')
 
 function IntroductionSection() {
   return (
@@ -146,6 +146,7 @@ module.exports = function Index() {
       <StepsSection />
       <Accordion />
       <GetUpdatesSection />
+      <SocialMediaBar />
     </Layout>
   )
 }

@@ -218,6 +218,19 @@
   display: none;
 }
 
+/* social media bar */
+.social-media-bar {
+  position: fixed;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.social-media-bar button {
+  display: block;
+}
+
 /* media query  */
 @media (max-width: 700px) {
   .introduction-section {
