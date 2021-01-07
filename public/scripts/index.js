@@ -4,6 +4,14 @@
 */
 const toggleModal = () => {
   document.querySelector(".modal").classList.toggle("modal--hidden")
+
+  let hiddenModal = document.querySelector(".modal").classList.value
+  let iFrameDiv =  document.querySelector(".modal iframe")
+  if (hiddenModal === "modal modal--hidden") {
+    iFrameDiv.setAttribute("src", '')
+  } else {
+    iFrameDiv.setAttribute("src", "https://www.youtube.com/embed/QH2-TGUlwu4")
+  }
 }
 
 document.querySelector(".btn--watch").addEventListener("click", toggleModal)

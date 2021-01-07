@@ -11,7 +11,7 @@ function IntroductionSection() {
         <div className="hero-content">
           <h1 className="hero__header">Powered by you</h1>
           <p className="hero__text">See something broken online?<br />Tell the world and get help with Roar from More Human Internet.</p>
-          <a className="mhi-button btn btn--download" rel="noopener noreferrer" href="https://morehumaninternet.org">Free Download</a>
+          <a className="mhi-button btn btn--download" rel="noopener noreferrer" href="https://chrome.google.com/webstore/detail/roar/jfcmnmgckhjcflmljjgjjilmjhbgdfkc?hl=en">Free Download</a>
           <button className="mhi-button btn btn--watch">Watch Video</button>
         </div>
         <img className="hero__gif" src="demo_video.gif" />
