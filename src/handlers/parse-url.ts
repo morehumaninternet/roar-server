@@ -16,11 +16,6 @@ export const urlOf = (urlString: string): URL => {
   }
 }
 
-export const domainOf = (urlString: string): string => {
-  const { host } = urlOf(urlString)
-  return host.replace(/^www\./, '')
-}
-
 const parseHost = (url: URL): { host: string; subdomain?: string; hostWithoutSubDomain: string } => {
   const parsed = parseDomain(url.hostname)
 

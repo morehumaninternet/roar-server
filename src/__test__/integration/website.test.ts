@@ -30,7 +30,7 @@ describe('/website', () => {
     const response = await mocks.agent.get('/v1/website?domain=github.com').expect(200)
 
     expect(response.body).to.eql({
-      url: 'github.com',
+      matching_url: 'github.com',
       domain: 'github.com',
       twitter_handle: '@github',
     })
@@ -42,7 +42,7 @@ describe('/website', () => {
     const response = await mocks.agent.get('/v1/website?domain=github.com').expect(200)
 
     expect(response.body).to.eql({
-      url: 'github.com',
+      matching_url: 'github.com',
       domain: 'github.com',
       twitter_handle: '@github',
     })
@@ -58,7 +58,7 @@ describe('/website', () => {
     const response = await mocks.agent.get('/v1/website?domain=https://generationsinc.org').expect(200)
 
     expect(response.body).to.eql({
-      url: 'generationsinc.org',
+      matching_url: 'generationsinc.org',
       domain: 'generationsinc.org',
       twitter_handle: '@generations',
     })
@@ -68,7 +68,7 @@ describe('/website', () => {
     const response = await mocks.agent.get('/v1/website?url=https://docs.google.com').expect(200)
 
     expect(response.body).to.eql({
-      url: 'docs.google.com',
+      matching_url: 'docs.google.com',
       domain: 'docs.google.com',
       twitter_handle: '@googledocs',
     })
@@ -78,7 +78,7 @@ describe('/website', () => {
     const response = await mocks.agent.get('/v1/website?url=https://docs.google.com/somedoc').expect(200)
 
     expect(response.body).to.eql({
-      url: 'docs.google.com',
+      matching_url: 'docs.google.com',
       domain: 'docs.google.com',
       twitter_handle: '@googledocs',
     })
@@ -88,7 +88,7 @@ describe('/website', () => {
     const response = await mocks.agent.get('/v1/website?url=google.com').expect(200)
 
     expect(response.body).to.eql({
-      url: 'google.com',
+      matching_url: 'google.com',
       domain: 'google.com',
       twitter_handle: '@Google',
     })
@@ -98,7 +98,7 @@ describe('/website', () => {
     const response = await mocks.agent.get('/v1/website?url=google.com/maps').expect(200)
 
     expect(response.body).to.eql({
-      url: 'google.com/maps',
+      matching_url: 'google.com/maps',
       domain: 'google.com',
       twitter_handle: '@googlemaps',
     })

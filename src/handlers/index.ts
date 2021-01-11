@@ -1,6 +1,6 @@
 import { IRouterContext } from 'koa-router'
 import { fromBody } from './fromBody'
-import { domainOf, parseUrl } from './parse-url'
+import { parseUrl } from './parse-url'
 import { extractFiles } from './extractFiles'
 import { getCurrentUser } from './getCurrentUser'
 import * as mailchimp from '../external-apis/mailchimp'
@@ -12,7 +12,7 @@ import * as websites from '../models/websites'
 
 type Handler<T> = (ctx: IRouterContext) => Promise<T extends undefined ? { status: 200 | 201 } : { status: 200 | 201; body: T }>
 
-export const getWebsite: Handler<{ domain: string; url: string; twitter_handle: null | string }> = async ctx => {
+export const getWebsite: Handler<{ domain: string; matching_url: string; twitter_handle: null | string }> = async ctx => {
   const urlString: string | undefined = ctx.request.query.domain || ctx.request.query.url
   if (!urlString) {
     throw { status: 400, message: 'Query must include url, a string' }
@@ -27,7 +27,7 @@ export const getWebsite: Handler<{ domain: string; url: string; twitter_handle: 
       status: 200,
       body: {
         domain: parsedUrl.host,
-        url: websiteRow.url,
+        matching_url: websiteRow.url,
         twitter_handle: websiteRow.twitter_handle,
       },
     }
@@ -42,7 +42,7 @@ export const getWebsite: Handler<{ domain: string; url: string; twitter_handle: 
   // tslint:disable-next-line: no-expression-statement
   await websites.upsert({ url: domain, twitter_handle: twitterHandle })
 
-  return { status: 200, body: { domain, url: domain, twitter_handle: twitterHandle } }
+  return { status: 200, body: { domain, matching_url: domain, twitter_handle: twitterHandle } }
 }
 
 export const getMe: Handler<{ photoUrl: null | string }> = async ctx => {
@@ -53,12 +53,13 @@ export const getMe: Handler<{ photoUrl: null | string }> = async ctx => {
 export const postFeedback: Handler<{ url: string }> = async ctx => {
   const status = fromBody(ctx, 'status', 'string')
 
-  const hostOrDomain = ctx.request.body.domain || ctx.request.body.host
-  if (!hostOrDomain || typeof hostOrDomain !== 'string') {
+  const matchingUrl = ctx.request.body.matching_url || ctx.request.body.domain || ctx.request.body.host
+  if (!matchingUrl || typeof matchingUrl !== 'string') {
     throw { status: 400, message: `Body must include domain, a string` }
   }
 
-  const domain = domainOf(hostOrDomain)
+  // Normalize the incoming url
+  const websiteUrl = parseUrl(matchingUrl).fullWithFirstPath
 
   // Support images under the field name 'images' or 'screenshots'
   const images = extractFiles(ctx, 'images')
@@ -73,7 +74,7 @@ export const postFeedback: Handler<{ url: string }> = async ctx => {
   })
 
   // tslint:disable-next-line: no-expression-statement
-  await saveFeedback({ user, status, websiteUrl: domain, imagesData, tweetUrl: url })
+  await saveFeedback({ user, status, websiteUrl, imagesData, tweetUrl: url })
 
   return { status: 201, body: { url } }
 }
