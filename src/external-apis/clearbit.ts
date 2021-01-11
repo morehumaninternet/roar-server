@@ -10,12 +10,16 @@ export async function getTwitterHandle(domain: string): Promise<null | string> {
     throw new Error('Do not call when running tests')
   }
 
-  const response = await axios.get(`https://company.clearbit.com/v2/companies/find?domain=${domain}`, {
-    headers: {
-      Authorization: `Bearer ${process.env.CLEARBIT_SECRET_API_KEY}`
-    }
-  })
+  try {
+    const response = await axios.get(`https://company.clearbit.com/v2/companies/find?domain=${domain}`, {
+      headers: {
+        Authorization: `Bearer ${process.env.CLEARBIT_SECRET_API_KEY}`,
+      },
+    })
 
-  const twitterHandle = response.data.twitter?.handle
-  return twitterHandle && `@${twitterHandle}`
+    const twitterHandle = response.data.twitter?.handle
+    return twitterHandle && `@${twitterHandle}`
+  } catch (err) {
+    return console.error(err), null
+  }
 }

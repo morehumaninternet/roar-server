@@ -80,7 +80,6 @@ type ParseDomainListed = {
 
 type ParseDomainError = {
   type: 'INVALID'
-  foo: string
   errors: ReadonlyArray<{
     type: string
     message: string

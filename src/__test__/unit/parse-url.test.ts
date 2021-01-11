@@ -1,6 +1,6 @@
 // tslint:disable:no-let no-expression-statement
 import { expect } from 'chai'
-import { parseUrl } from '../../handlers/parse-url'
+import { parseUrl } from '../../parse-url'
 
 describe('parse-url', () => {
   it('works for uk addresses', () => {

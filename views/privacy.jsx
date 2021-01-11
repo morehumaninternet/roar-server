@@ -12,8 +12,7 @@ function PrivacySection() {
       When you post feedback, we use the permission you have previously granted to post a tweet using your account. The public tweet contents are exactly as they appeared to you in the extension. We save a record of the exact URLs you visited when taking each screenshot, but do not post those publicly.</p>
 
       <h3>2. Third Party Relationships</h3>
-      <p>This extension posts to Twitter using your account. By using More Human Internet’s services, you agree not to violate any of the policies set out in Twitter’s <a target="_blank" href="https://twitter.com/en/privacy">privacy policy</a> or <a target="_blank" href="https://twitter.com/en/tos">terms of service</a>.
-      </p>
+      <p>This extension posts to Twitter using your account. By using More Human Internet’s services, you agree not to violate any of the policies set out in Twitter’s <a target="_blank" href="https://twitter.com/en/privacy">privacy policy</a> or <a target="_blank" href="https://twitter.com/en/tos">terms of service</a>.</p>
 
       <h3>3. Cookies Policy</h3>
       <p>We use cookies to keep you authorized on Twitter.</p>

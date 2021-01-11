@@ -1,6 +1,6 @@
 import { IRouterContext } from 'koa-router'
 import { fromBody } from './fromBody'
-import { parseUrl } from './parse-url'
+import { parseUrl } from '../parse-url'
 import { extractFiles } from './extractFiles'
 import { getCurrentUser } from './getCurrentUser'
 import * as mailchimp from '../external-apis/mailchimp'
@@ -35,7 +35,7 @@ export const getWebsite: Handler<{ domain: string; matching_url: string; twitter
 
   const domain = parsedUrl.host
 
-  const twitterHandle = (await scrape.getTwitterHandle(domain)) || (await clearbit.getTwitterHandle(domain))
+  const twitterHandle = (await scrape.getTwitterHandle(parsedUrl)) || (await clearbit.getTwitterHandle(domain))
 
   // Insert the row no matter what
   // TODO: implement logic to scrape & try clearbit again if the last fetch was done awhile ago
