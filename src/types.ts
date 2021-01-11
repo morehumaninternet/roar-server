@@ -64,7 +64,7 @@ type Website = {
   updated_at: Date
 }
 
-type ParsedDomain = {
+type ParseDomainListed = {
   type: 'LISTED'
   hostname: string
   labels: string
@@ -78,6 +78,16 @@ type ParsedDomain = {
   topLevelDomains: ReadonlyArray<string>
 }
 
+type ParseDomainError = {
+  type: 'INVALID'
+  foo: string
+  errors: ReadonlyArray<{
+    type: string
+    message: string
+  }>
+}
+
+type ParseDomainResult = ParseDomainListed | ParseDomainError | { type: 'IP' } | { type: 'RESERVED' } | { type: 'NOT_LISTED' }
 declare module 'parse-domain' {
-  export function parseDomain(url: URL): ParsedDomain
+  export function parseDomain(hostname: string): ParseDomainResult
 }

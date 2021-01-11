@@ -17,6 +17,7 @@ export const getWebsite: Handler<{ domain: string; url: string; twitter_handle: 
   if (!urlString) {
     throw { status: 400, message: 'Query must include url, a string' }
   }
+
   const parsedUrl = parseUrl(urlString)
 
   const websiteRow = await websites.getBestMatching(parsedUrl)

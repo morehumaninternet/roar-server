@@ -28,6 +28,6 @@ describe('parse-url', () => {
     } catch (e) {
       err = e
     }
-    expect(err).to.eql({ status: 400, message: 'Expected a publicly facing url' })
+    expect(err).to.eql({ status: 400, message: 'Must specify a listed hostname' })
   })
 })
