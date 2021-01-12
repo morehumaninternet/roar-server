@@ -1,42 +1,53 @@
 import db from '../db'
-const knexUpsert = require('knex-upsert')
 
-export function upsert(object: { url: string; twitter_handle: null | string }): Promise<Website> {
-  if (object.url.startsWith('www.')) {
-    throw new Error('Strip www. before creating the website')
-  }
-
-  if (object.twitter_handle && !object.twitter_handle.startsWith('@')) {
-    throw new Error('Twitter handle must start with a @')
-  }
-
-  return knexUpsert({ db, table: 'websites', object, key: 'url' })
+export type WebsiteInsert = {
+  subdomain: null | string
+  domain: string
+  path: null | string
+  twitter_handle: null | string
 }
 
-export async function getBestMatching(parsedUrl: ParsedUrl): Promise<any> {
+export function upsert(websites: ReadonlyArray<WebsiteInsert>): Promise<any> {
+  for (const website of websites) {
+    if (website.twitter_handle && !website.twitter_handle.startsWith('@')) {
+      throw new Error('Twitter handle must start with a @')
+    }
+  }
+
+  return db('websites').insert(websites).onConflict(['subdomain', 'domain', 'path']).merge()
+}
+
+// Gets the given website by its domain, along with any non_default_twitter_handles
+export async function get(query: { hostWithoutSubDomain: string }): Promise<any> {
   const result = await db.raw(
     `
-    SELECT twitter_handle, url from (
-      SELECT websites.*, 3 as priority
+    WITH no_subdomain_nor_path as (
+      SELECT *
         FROM websites
-       WHERE url = ?
+       WHERE domain = ?
+         AND subdomain IS NULL
+         AND path IS NULL
+    ),
 
-       UNION
+    subdomain_or_path as (
+      SELECT json_agg(
+               json_build_object(
+                 'subdomain', subdomain,
+                 'path', path,
+                 'twitter_handle', twitter_handle
+                )
+              ) as non_default_twitter_handles
+        FROM websites
+       WHERE domain = ?
+        AND ((subdomain IS NOT NULL) OR (path IS NOT NULL))
+    )
 
-      SELECT websites.*, 2 as priority
-       FROM websites
-      WHERE url = ?
-
-      UNION
-
-     SELECT websites.*, 1 as priority
-       FROM websites
-      WHERE url = ?
-    ) matches
-    ORDER BY priority DESC
-       LIMIT 1
-  `,
-    [parsedUrl.fullWithFirstPath, parsedUrl.host, parsedUrl.hostWithoutSubDomain]
+    SELECT no_subdomain_nor_path.*
+         , COALESCE(subdomain_or_path.non_default_twitter_handles, '[]'::json) as non_default_twitter_handles
+      FROM no_subdomain_nor_path
+      JOIN subdomain_or_path on true
+    `,
+    [query.hostWithoutSubDomain, query.hostWithoutSubDomain]
   )
 
   return result.rows[0]

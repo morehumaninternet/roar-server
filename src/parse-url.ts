@@ -31,12 +31,12 @@ const parseHost = (url: URL): { host: string; subdomain?: string; hostWithoutSub
     }
   }
 
-  const tld = parsed.icann.topLevelDomains.join('.')
+  const tld = parsed.topLevelDomains.join('.')
 
   return {
     host: url.host,
-    subdomain: parsed.icann.subDomains.length ? parsed.icann.subDomains.join('.') : undefined,
-    hostWithoutSubDomain: `${parsed.icann.domain}.${tld}`,
+    subdomain: parsed.subDomains.length ? parsed.subDomains.join('.') : undefined,
+    hostWithoutSubDomain: `${parsed.domain}.${tld}`,
   }
 }
 

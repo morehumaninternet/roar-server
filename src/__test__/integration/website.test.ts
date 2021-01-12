@@ -11,13 +11,14 @@ describe('/website', () => {
   const mocks = createMocks()
   let clearBitGetTwitterHandle: sinon.SinonStub
 
-  before(() =>
-    db('websites').insert([
-      { url: 'google.com', twitter_handle: '@Google' },
-      { url: 'docs.google.com', twitter_handle: '@googledocs' },
-      { url: 'google.com/maps', twitter_handle: '@googlemaps' },
+  before(async () => {
+    await db('websites').insert([
+      { domain: 'google.com', twitter_handle: '@Google' },
+      { domain: 'google.com', subdomain: 'docs', path: null, twitter_handle: '@googledocs' },
+      { domain: 'google.com', subdomain: null, path: 'maps', twitter_handle: '@googlemaps' },
+      { domain: 'foo.github.io', twitter_handle: '@foo_github' },
     ])
-  )
+  })
 
   beforeEach(() => (clearBitGetTwitterHandle = sinon.stub(clearbit, 'getTwitterHandle').throws()))
   afterEach(() => sinon.restore())
@@ -30,9 +31,9 @@ describe('/website', () => {
     const response = await mocks.agent.get('/v1/website?domain=github.com').expect(200)
 
     expect(response.body).to.eql({
-      matching_url: 'github.com',
       domain: 'github.com',
       twitter_handle: '@github',
+      non_default_twitter_handles: [],
     })
   })
 
@@ -42,9 +43,9 @@ describe('/website', () => {
     const response = await mocks.agent.get('/v1/website?domain=github.com').expect(200)
 
     expect(response.body).to.eql({
-      matching_url: 'github.com',
       domain: 'github.com',
       twitter_handle: '@github',
+      non_default_twitter_handles: [],
     })
   })
 
@@ -58,49 +59,33 @@ describe('/website', () => {
     const response = await mocks.agent.get('/v1/website?domain=https://generationsinc.org').expect(200)
 
     expect(response.body).to.eql({
-      matching_url: 'generationsinc.org',
       domain: 'generationsinc.org',
       twitter_handle: '@generations',
+      non_default_twitter_handles: [],
     })
   })
 
-  it('works for google docs', async () => {
-    const response = await mocks.agent.get('/v1/website?url=https://docs.google.com').expect(200)
+  it('works for google, no matter which domain is specified', async () => {
+    const response = await mocks.agent.get('/v1/website?domain=https://docs.google.com').expect(200)
 
     expect(response.body).to.eql({
-      matching_url: 'docs.google.com',
-      domain: 'docs.google.com',
-      twitter_handle: '@googledocs',
-    })
-  })
-
-  it('works for google docs with a path', async () => {
-    const response = await mocks.agent.get('/v1/website?url=https://docs.google.com/somedoc').expect(200)
-
-    expect(response.body).to.eql({
-      matching_url: 'docs.google.com',
-      domain: 'docs.google.com',
-      twitter_handle: '@googledocs',
-    })
-  })
-
-  it('works for google', async () => {
-    const response = await mocks.agent.get('/v1/website?url=google.com').expect(200)
-
-    expect(response.body).to.eql({
-      matching_url: 'google.com',
       domain: 'google.com',
       twitter_handle: '@Google',
+      non_default_twitter_handles: [
+        { subdomain: 'docs', path: null, twitter_handle: '@googledocs' },
+        { subdomain: null, path: 'maps', twitter_handle: '@googlemaps' },
+      ],
     })
   })
 
-  it('works for google maps', async () => {
-    const response = await mocks.agent.get('/v1/website?url=google.com/maps').expect(200)
+  // https://github.com/peerigon/parse-domain#%EF%B8%8F-effective-tlds--tlds-acknowledged-by-icann
+  it('works for github.io addresses which act as a private domain name registrar', async () => {
+    const response = await mocks.agent.get('/v1/website?domain=https://dandanua.github.io').expect(200)
 
     expect(response.body).to.eql({
-      matching_url: 'google.com/maps',
-      domain: 'google.com',
-      twitter_handle: '@googlemaps',
+      domain: 'dandanua.github.io',
+      twitter_handle: '@DanyloYakymenko',
+      non_default_twitter_handles: [],
     })
   })
 })
