@@ -35,7 +35,7 @@ jobs:
       - run: npm install
       - run: npm run lint
       - run: cp .example.env .env.test
-      - run: NODE_ENV=test npm run knex migrate:latest
+      - run: MOCHA_OPTS='--timeout 8000' NODE_ENV=test npm run knex migrate:latest
       - run: npm test
 
       - uses: 8398a7/action-slack@v3
