@@ -18,7 +18,7 @@ export function upsert(websites: ReadonlyArray<WebsiteInsert>): Promise<any> {
 }
 
 // Gets the given website by its domain, along with any non_default_twitter_handles
-export async function get(query: { hostWithoutSubDomain: string }): Promise<any> {
+export async function get(query: { hostWithoutSubdomain: string }): Promise<Website> {
   const result = await db.raw(
     `
     WITH no_subdomain_nor_path as (
@@ -47,7 +47,7 @@ export async function get(query: { hostWithoutSubDomain: string }): Promise<any>
       FROM no_subdomain_nor_path
       JOIN subdomain_or_path on true
     `,
-    [query.hostWithoutSubDomain, query.hostWithoutSubDomain]
+    [query.hostWithoutSubdomain, query.hostWithoutSubdomain]
   )
 
   return result.rows[0]

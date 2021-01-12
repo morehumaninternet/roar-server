@@ -43,7 +43,7 @@ const saveFeedback = async ({ user, status, parsedUrl, imagesData, tweetUrl }: S
   `
 
   const defaultQueryArgs: ReadonlyArray<any> = [
-    parsedUrl.hostWithoutSubDomain,
+    parsedUrl.hostWithoutSubdomain,
     parsedUrl.subdomain || null,
     parsedUrl.firstPath || null,
     user.id,

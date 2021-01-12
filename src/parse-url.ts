@@ -16,7 +16,7 @@ export const urlOf = (urlString: string): URL => {
   }
 }
 
-const parseHost = (url: URL): { host: string; subdomain?: string; hostWithoutSubDomain: string } => {
+const parseHost = (url: URL): { host: string; subdomain?: string; hostWithoutSubdomain: string } => {
   const parsed = parseDomain(url.hostname)
 
   if (parsed.type === 'INVALID') {
@@ -36,14 +36,14 @@ const parseHost = (url: URL): { host: string; subdomain?: string; hostWithoutSub
   return {
     host: url.host,
     subdomain: parsed.subDomains.length ? parsed.subDomains.join('.') : undefined,
-    hostWithoutSubDomain: `${parsed.domain}.${tld}`,
+    hostWithoutSubdomain: `${parsed.domain}.${tld}`,
   }
 }
 
 export const parseUrl = (urlString: string): ParsedUrl => {
   const url = urlOf(urlString)
-  const { host, subdomain, hostWithoutSubDomain } = parseHost(url)
+  const { host, subdomain, hostWithoutSubdomain } = parseHost(url)
   const [, firstPath] = url.pathname.split('/')
   const fullWithFirstPath = firstPath ? `${host}/${firstPath}` : host
-  return { host, hostWithoutSubDomain, subdomain, fullWithFirstPath, firstPath: firstPath || undefined }
+  return { host, hostWithoutSubdomain, subdomain, fullWithFirstPath, firstPath: firstPath || undefined }
 }

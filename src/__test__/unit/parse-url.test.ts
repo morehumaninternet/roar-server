@@ -6,7 +6,7 @@ describe('parse-url', () => {
   it('works for uk addresses', () => {
     expect(parseUrl('www.google.co.uk')).to.eql({
       host: 'google.co.uk',
-      hostWithoutSubDomain: 'google.co.uk',
+      hostWithoutSubdomain: 'google.co.uk',
       subdomain: undefined,
       fullWithFirstPath: 'google.co.uk',
       firstPath: undefined,
@@ -14,7 +14,7 @@ describe('parse-url', () => {
 
     expect(parseUrl('cool.google.co.uk/search')).to.eql({
       host: 'cool.google.co.uk',
-      hostWithoutSubDomain: 'google.co.uk',
+      hostWithoutSubdomain: 'google.co.uk',
       subdomain: 'cool',
       fullWithFirstPath: 'cool.google.co.uk/search',
       firstPath: 'search',

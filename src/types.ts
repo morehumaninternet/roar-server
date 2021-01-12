@@ -48,7 +48,7 @@ type SerializedUser = {
 
 type ParsedUrl = {
   host: string
-  hostWithoutSubDomain: string
+  hostWithoutSubdomain: string
   subdomain?: string
   firstPath?: string
   fullWithFirstPath: string
@@ -59,8 +59,8 @@ type Website = {
   domain: string
   twitter_handle: null | string
   non_default_twitter_handles: ReadonlyArray<{
-    subdomain: string
-    path: string
+    subdomain: null | string
+    path: null | string
     twitter_handle: string
   }>
   last_checked_website_html_at?: Date

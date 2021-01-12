@@ -22,7 +22,7 @@ export const getWebsite: Handler<GetWebsiteResult> = async ctx => {
     throw { status: 400, message: 'Query must include url, a string' }
   }
 
-  const { host, hostWithoutSubDomain, subdomain, firstPath } = parseUrl(urlString)
+  const { host, hostWithoutSubdomain, subdomain, firstPath } = parseUrl(urlString)
 
   if (host === 'twitter.com') {
     return {
@@ -35,7 +35,7 @@ export const getWebsite: Handler<GetWebsiteResult> = async ctx => {
     }
   }
 
-  const websiteRow = await websites.get({ hostWithoutSubDomain })
+  const websiteRow = await websites.get({ hostWithoutSubdomain })
 
   if (websiteRow) {
     return {
@@ -49,7 +49,7 @@ export const getWebsite: Handler<GetWebsiteResult> = async ctx => {
   }
 
   const scrapingSubdomainHandle = subdomain && scrape.getTwitterHandle(host)
-  const domainHandle = (await scrape.getTwitterHandle(hostWithoutSubDomain)) || (await clearbit.getTwitterHandle(hostWithoutSubDomain))
+  const domainHandle = (await scrape.getTwitterHandle(hostWithoutSubdomain)) || (await clearbit.getTwitterHandle(hostWithoutSubdomain))
 
   const subdomainHandle = await scrapingSubdomainHandle
 
@@ -59,7 +59,7 @@ export const getWebsite: Handler<GetWebsiteResult> = async ctx => {
     {
       subdomain: null,
       path: null,
-      domain: hostWithoutSubDomain,
+      domain: hostWithoutSubdomain,
       twitter_handle: domainHandle || null,
     },
   ]
@@ -74,7 +74,7 @@ export const getWebsite: Handler<GetWebsiteResult> = async ctx => {
     toInsert.push({
       subdomain: subdomain!,
       path: null,
-      domain: hostWithoutSubDomain,
+      domain: hostWithoutSubdomain,
       twitter_handle: subdomainHandle,
     })
   }
@@ -87,7 +87,7 @@ export const getWebsite: Handler<GetWebsiteResult> = async ctx => {
   return {
     status: 200,
     body: {
-      domain: hostWithoutSubDomain,
+      domain: hostWithoutSubdomain,
       twitter_handle: domainHandle,
       non_default_twitter_handles,
     },
