@@ -4,19 +4,7 @@ import * as scrape from '../external-apis/scrape'
 import * as clearbit from '../external-apis/clearbit'
 import * as websites from '../models/websites'
 
-type NonDefaultTwitterHandle = {
-  subdomain: null | string
-  path: null | string
-  twitter_handle: string
-}
-
-type GetWebsiteResult = {
-  domain: string
-  twitter_handle: null | string
-  non_default_twitter_handles: ReadonlyArray<NonDefaultTwitterHandle>
-}
-
-export const getWebsite: Handler<GetWebsiteResult> = async ctx => {
+export const getWebsite: Handler<Pick<Website, 'domain' | 'twitter_handle' | 'non_default_twitter_handles'>> = async ctx => {
   const urlString: string | undefined = ctx.request.query.domain
   if (!urlString) {
     throw { status: 400, message: 'Query must include url, a string' }
@@ -54,7 +42,7 @@ export const getWebsite: Handler<GetWebsiteResult> = async ctx => {
   const subdomainHandle = await scrapingSubdomainHandle
 
   // tslint:disable: no-expression-statement readonly-array
-  const non_default_twitter_handles: NonDefaultTwitterHandle[] = []
+  const non_default_twitter_handles: WebsiteNonDefaultTwitterHandle[] = []
   const toInsert: websites.WebsiteInsert[] = [
     {
       subdomain: null,
