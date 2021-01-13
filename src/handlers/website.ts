@@ -10,18 +10,7 @@ export const getWebsite: Handler<Pick<Website, 'domain' | 'twitter_handle' | 'no
     throw { status: 400, message: 'Query must include url, a string' }
   }
 
-  const { host, hostWithoutSubdomain, subdomain, firstPath } = parseUrl(urlString)
-
-  if (host === 'twitter.com') {
-    return {
-      status: 200,
-      body: {
-        domain: host,
-        twitter_handle: firstPath ? `@${firstPath}` : '@Twitter',
-        non_default_twitter_handles: [],
-      },
-    }
-  }
+  const { host, hostWithoutSubdomain, subdomain } = parseUrl(urlString)
 
   const websiteRow = await websites.get({ hostWithoutSubdomain })
 
