@@ -1,15 +1,54 @@
 import db from '../db'
-const upsert = require('knex-upsert')
 
+export type WebsiteInsert = {
+  subdomain: null | string
+  domain: string
+  path: null | string
+  twitter_handle: null | string
+}
 
-export function upsertWebsite(object: { domain: string, twitter_handle: null | string }): Promise<Website> {
-  if (object.domain.startsWith('www.')) {
-    throw new Error('Strip www. before creating the website')
+export function upsert(websites: ReadonlyArray<WebsiteInsert>): Promise<any> {
+  for (const website of websites) {
+    if (website.twitter_handle && !website.twitter_handle.startsWith('@')) {
+      throw new Error('Twitter handle must start with a @')
+    }
   }
 
-  if (object.twitter_handle && !object.twitter_handle.startsWith('@')) {
-    throw new Error('Twitter handle must start with a @')
-  }
+  return db('websites').insert(websites).onConflict(['subdomain', 'domain', 'path']).merge()
+}
 
-  return upsert({ db, table: 'websites', object, key: 'domain' })
+// Gets the given website by its domain, along with any non_default_twitter_handles
+export async function get(query: { hostWithoutSubdomain: string }): Promise<Website> {
+  const result = await db.raw(
+    `
+    WITH no_subdomain_nor_path as (
+      SELECT *
+        FROM websites
+       WHERE domain = ?
+         AND subdomain IS NULL
+         AND path IS NULL
+    ),
+
+    subdomain_or_path as (
+      SELECT json_agg(
+               json_build_object(
+                 'subdomain', subdomain,
+                 'path', path,
+                 'twitter_handle', twitter_handle
+                )
+              ) as non_default_twitter_handles
+        FROM websites
+       WHERE domain = ?
+        AND ((subdomain IS NOT NULL) OR (path IS NOT NULL))
+    )
+
+    SELECT no_subdomain_nor_path.*
+         , COALESCE(subdomain_or_path.non_default_twitter_handles, '[]'::json) as non_default_twitter_handles
+      FROM no_subdomain_nor_path
+      JOIN subdomain_or_path on true
+    `,
+    [query.hostWithoutSubdomain, query.hostWithoutSubdomain]
+  )
+
+  return result.rows[0]
 }

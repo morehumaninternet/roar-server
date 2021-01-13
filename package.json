@@ -16,13 +16,13 @@
     "@mailchimp/mailchimp_marketing": "3.0.27",
     "@sentry/node": "5.27.3",
     "@sentry/tracing": "5.27.3",
-    "axios": "0.21.0",
+    "axios": "0.21.1",
     "babel-preset-es2015": "6.24.1",
     "babel-preset-react": "6.24.1",
     "babel-register": "6.26.0",
     "cheerio": "1.0.0-rc.3",
     "dotenv": "8.2.0",
-    "knex": "0.21.7",
+    "knex": "0.21.15",
     "knex-upsert": "0.0.4",
     "koa": "2.13.0",
     "koa-body": "4.0.7",
@@ -36,6 +36,7 @@
     "lodash": "4.17.20",
     "mocha.parallel": "0.15.3",
     "node-uuid": "1.4.8",
+    "parse-domain": "3.0.3",
     "passport-twitter": "1.0.4",
     "pg": "8.2.1",
     "react": "17.0.1",
@@ -95,7 +96,7 @@
     "tee": "0.2.0",
     "tslint": "5.8.0",
     "tslint-immutable": "4.4.0",
-    "typescript": "4.0.3"
+    "typescript": "4.1.3"
   },
   "engines": {
     "node": "14.x"
