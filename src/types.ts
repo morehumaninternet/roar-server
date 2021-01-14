@@ -55,8 +55,8 @@ type ParsedUrl = {
 }
 
 type WebsiteNonDefaultTwitterHandle = {
-  subdomain: null | string
-  path: null | string
+  subdomain: string
+  path: string
   twitter_handle: string
 }
 

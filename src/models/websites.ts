@@ -1,9 +1,9 @@
 import db from '../db'
 
 export type WebsiteInsert = {
-  subdomain: null | string
+  subdomain: string
   domain: string
-  path: null | string
+  path: string
   twitter_handle: null | string
 }
 
@@ -25,8 +25,8 @@ export async function get(query: { hostWithoutSubdomain: string }): Promise<Webs
       SELECT *
         FROM websites
        WHERE domain = ?
-         AND subdomain IS NULL
-         AND path IS NULL
+         AND subdomain = ''
+         AND path = ''
     ),
 
     subdomain_or_path as (
@@ -39,7 +39,7 @@ export async function get(query: { hostWithoutSubdomain: string }): Promise<Webs
               ) as non_default_twitter_handles
         FROM websites
        WHERE domain = ?
-        AND ((subdomain IS NOT NULL) OR (path IS NOT NULL))
+        AND ((subdomain != '') OR (path != ''))
     )
 
     SELECT no_subdomain_nor_path.*

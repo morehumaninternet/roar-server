@@ -7,9 +7,9 @@ describe('parse-url', () => {
     expect(parseUrl('www.google.co.uk')).to.eql({
       host: 'google.co.uk',
       hostWithoutSubdomain: 'google.co.uk',
-      subdomain: undefined,
+      subdomain: '',
       fullWithFirstPath: 'google.co.uk',
-      firstPath: undefined,
+      firstPath: '',
     })
 
     expect(parseUrl('cool.google.co.uk/search')).to.eql({

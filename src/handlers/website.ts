@@ -34,8 +34,8 @@ export const getWebsite: Handler<Pick<Website, 'domain' | 'twitter_handle' | 'no
   const non_default_twitter_handles: WebsiteNonDefaultTwitterHandle[] = []
   const toInsert: websites.WebsiteInsert[] = [
     {
-      subdomain: null,
-      path: null,
+      subdomain: '',
+      path: '',
       domain: hostWithoutSubdomain,
       twitter_handle: domainHandle || null,
     },
@@ -44,13 +44,13 @@ export const getWebsite: Handler<Pick<Website, 'domain' | 'twitter_handle' | 'no
   if (subdomainHandle && subdomainHandle !== domainHandle) {
     non_default_twitter_handles.push({
       subdomain: subdomain!,
-      path: null,
+      path: '',
       twitter_handle: subdomainHandle,
     })
 
     toInsert.push({
       subdomain: subdomain!,
-      path: null,
+      path: '',
       domain: hostWithoutSubdomain,
       twitter_handle: subdomainHandle,
     })
