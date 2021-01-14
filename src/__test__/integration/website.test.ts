@@ -13,10 +13,10 @@ describe('/website', () => {
 
   before(async () => {
     await db('websites').insert([
-      { domain: 'google.com', twitter_handle: '@Google' },
-      { domain: 'google.com', subdomain: 'docs', path: null, twitter_handle: '@googledocs' },
-      { domain: 'google.com', subdomain: null, path: 'maps', twitter_handle: '@googlemaps' },
-      { domain: 'foo.github.io', twitter_handle: '@foo_github' },
+      { domain: 'google.com', subdomain: '', path: '', twitter_handle: '@Google' },
+      { domain: 'google.com', subdomain: 'docs', path: '', twitter_handle: '@googledocs' },
+      { domain: 'google.com', subdomain: '', path: 'maps', twitter_handle: '@googlemaps' },
+      { domain: 'foo.github.io', subdomain: '', path: '', twitter_handle: '@foo_github' },
     ])
   })
 
@@ -72,8 +72,8 @@ describe('/website', () => {
       domain: 'google.com',
       twitter_handle: '@Google',
       non_default_twitter_handles: [
-        { subdomain: 'docs', path: null, twitter_handle: '@googledocs' },
-        { subdomain: null, path: 'maps', twitter_handle: '@googlemaps' },
+        { subdomain: 'docs', path: '', twitter_handle: '@googledocs' },
+        { subdomain: '', path: 'maps', twitter_handle: '@googlemaps' },
       ],
     })
   })

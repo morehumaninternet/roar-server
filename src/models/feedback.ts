@@ -31,7 +31,7 @@ const saveFeedback = async ({ user, status, parsedUrl, imagesData, tweetUrl }: S
     WITH inserted_website(id) as (
       INSERT INTO websites(domain, subdomain, path)
           VALUES (?, ?, ?)
-      ON CONFLICT(domain, subdomain, path) DO UPDATE SET domain=EXCLUDED.domain, subdomain=EXCLUDED.subdomain, path=EXCLUDED.path
+      ON CONFLICT(domain, subdomain, path) DO UPDATE SET domain=EXCLUDED.domain
         RETURNING id
     ),
     inserted_feedback(id) as (
@@ -42,14 +42,7 @@ const saveFeedback = async ({ user, status, parsedUrl, imagesData, tweetUrl }: S
     ${imagesFeedbackSql(imagesData)}
   `
 
-  const defaultQueryArgs: ReadonlyArray<any> = [
-    parsedUrl.hostWithoutSubdomain,
-    parsedUrl.subdomain || null,
-    parsedUrl.firstPath || null,
-    user.id,
-    status,
-    tweetUrl,
-  ]
+  const defaultQueryArgs: ReadonlyArray<any> = [parsedUrl.hostWithoutSubdomain, parsedUrl.subdomain || '', parsedUrl.firstPath || '', user.id, status, tweetUrl]
   const imagesQueryArgs = flatten(imagesData.map(imageData => [imageData.name, imageData.file, imageData.file_extension]))
   const queryArgs = defaultQueryArgs.concat(imagesQueryArgs)
   // tslint:disable-next-line: no-expression-statement
