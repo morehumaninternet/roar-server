@@ -70,6 +70,7 @@ export function createRouter(withRouter: (router: Router) => Router = identity):
   const router = new Router()
     .get(`/health-check`, ({ response }) => Object.assign(response, { status: 200, body: 'OK' }))
     .use('/v1', v1Router.routes(), v1Router.allowedMethods())
+    .use('/leads', mappedHandlers.leads)
 
   for (const file of files('/public', '/css', '/html')) {
     const route = file.base === 'index.html' ? '' : file.ext === '.html' ? file.name : file.base
