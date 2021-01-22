@@ -8,6 +8,7 @@ const userIdsByFeedName = {
   '@NotionHQ': '708915428454576128',
   '@SlackHQ': '1305940272',
   '@Wix': '6608082',
+  '@figmadesign': '3181020308',
 }
 
 const bearerToken = process.env.TWITTER_BEARER_TOKEN!
