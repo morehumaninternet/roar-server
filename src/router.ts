@@ -63,6 +63,7 @@ export function createRouter(withRouter: (router: Router) => Router = identity):
     .post('/feedback', mappedHandlers.postFeedback)
     .post('/logout', mappedHandlers.logout)
     .post('/subscribe', mappedHandlers.subscribe)
+    .get('/leads', mappedHandlers.leads)
     .get('/fail', () => {
       throw new Error('Failure!')
     })
