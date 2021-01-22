@@ -13,9 +13,15 @@ const userIdsByFeedName = {
 const bearerToken = process.env.TWITTER_BEARER_TOKEN!
 
 const getPage = async (feedUserId: string, start_time: string, nextToken?: any): Promise<any> => {
-  const params: any = { start_time, max_results: 10, expansions: 'author_id', 'user.fields': 'name', 'tweet.fields': 'created_at' }
+  const params: any = {
+    start_time,
+    max_results: 100,
+    expansions: 'in_reply_to_user_id,referenced_tweets.id',
+    'user.fields': 'name',
+    'tweet.fields': 'created_at',
+  }
   if (nextToken) params.pagination_token = nextToken
-  const url = `https://api.twitter.com/2/users/${feedUserId}/mentions`
+  const url = `https://api.twitter.com/2/users/${feedUserId}/tweets`
 
   const resp = await needle('get', url, params, { headers: { authorization: `Bearer ${bearerToken}` } })
 
@@ -44,12 +50,20 @@ const getMentionsOfFeed = async (feedName: keyof typeof userIdsByFeedName, start
         for (const mention of resp.data) {
           const duplicate = userMentions.find(otherMention => otherMention.id === mention.id)
           if (!duplicate) {
-            userMentions.push(mention)
+            const referenced_tweets = mention.referenced_tweets
+              ?.filter((ref: { type: string; id: string }) => ref.type === 'replied_to')
+              .map((ref: { type: string; id: string }) => ref.id)
+            if (referenced_tweets) {
+              mention.in_reply_to_tweet_id = referenced_tweets[0]
+              userMentions.push(mention)
+            }
           }
         }
       }
       if (resp.meta.next_token) {
         nextToken = resp.meta.next_token
+      } else {
+        hasNextPage = false
       }
       if (resp.includes) {
         includes = includes.concat(resp.includes.users)
@@ -60,15 +74,17 @@ const getMentionsOfFeed = async (feedName: keyof typeof userIdsByFeedName, start
   }
 
   return userMentions.map(mention => {
-    const { username } = includes.find(include => include.id === mention.author_id)!
-
+    const res = includes.find(include => include.id === mention.in_reply_to_user_id)
+    const username = res ? res.username : 'unknown'
+    const opUserId = mention.in_reply_to_user_id
+    const opTweetId = mention.in_reply_to_tweet_id
     return {
       ...mention,
       username,
       feedName,
       feedUserId,
-      user_href: `https://twitter.com/${username}`,
-      tweet_href: `https://twitter.com/${username}/statuses/${mention.id}`,
+      user_href: `https://twitter.com/${opUserId}`,
+      tweet_href: `https://twitter.com/${opUserId}/statuses/${opTweetId}`,
     }
   })
 }
