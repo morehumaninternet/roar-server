@@ -1,6 +1,7 @@
 import passport = require('koa-passport')
 import * as passportTwitter from 'passport-twitter'
 import * as users from '../models/users'
+import * as slack from '../external-apis/slack'
 
 const host = process.env.NODE_ENV === 'prod' ? 'https://roar.morehumaninternet.org' : 'https://localhost:5004'
 
@@ -36,6 +37,8 @@ passport.use(
       // The user might already exist in our database or a new user should be created.
 
       const dbUser: User = await users.upsertWithTwitterProfile(profile)
+
+      slack.sendMessageIfNewUser(dbUser) // tslint:disable-line:no-expression-statement
 
       return done(null, {
         id: dbUser.id,
