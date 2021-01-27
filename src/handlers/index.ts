@@ -5,12 +5,15 @@ import { parseUrl } from '../parse-url'
 import { extractFiles } from './extractFiles'
 import { getCurrentUser } from './getCurrentUser'
 import { getAllMentions } from './leads'
+import { getSpies } from './spy'
 import * as mailchimp from '../external-apis/mailchimp'
 import * as twitter from '../external-apis/twitter'
 import { saveFeedback, extractImageData } from '../models/feedback'
 
 module Handlers {
   export const leads = getAllMentions
+
+  export const spy = getSpies
 
   export const getWebsite = website.getWebsite
 
