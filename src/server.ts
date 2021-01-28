@@ -1,5 +1,6 @@
 // tslint:disable:no-expression-statement
 import Koa = require('koa')
+const cors = require('@koa/cors')
 import * as Router from 'koa-router'
 import bodyParser = require('koa-body')
 import session = require('koa-session')
@@ -24,7 +25,7 @@ export function createServer(withRouter?: (router: Router) => Router): Koa {
       return next()
     })
   }
-
+  server.use(cors())
   server.use(bodyParser({ multipart: true, jsonLimit: '50mb' }))
   server.use((cookieParser as any).default())
 
